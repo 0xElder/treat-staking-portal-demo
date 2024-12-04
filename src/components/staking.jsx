@@ -1,6 +1,8 @@
+/* eslint-disable prettier/prettier */
 import { ethers } from "ethers";
 import React, { useEffect, useState } from "react";
 import { DUMMY_TOKEN, provider, STAKING_CONTRACT } from "../web3";
+import { sendElderCustomTransaction, getElderMsgAndFee } from "elderjs";
 
 const getStakingViews = async account => {
     const signer = provider.getSigner(account);
@@ -17,7 +19,7 @@ const getStakingViews = async account => {
     };
 };
 
-const Staking = ({ account }) => {
+const Staking = ({ account, elderAddress, elderClient }) => {
     const [views, setViews] = useState({});
     const [stake, setStake] = useState("");
     const [withdraw, setWithdraw] = useState("");
@@ -33,17 +35,19 @@ const Staking = ({ account }) => {
             STAKING_CONTRACT.address
         );
         if (allowance.lt(amount)) {
-            const tx = await dummyToken.approve(
-                STAKING_CONTRACT.address,
-                amount
-            );
-            await tx.wait();
+            const tx = await dummyToken.populateTransaction.approve(STAKING_CONTRACT.address, amount);
+
+            // getElderMsgAndFee(tx, elderAddress, rollappGasLimit, rollapValueTransfer, rollappChainID)
+            let { elderMsg, elderFee } = getElderMsgAndFee(tx, elderAddress, 1000000, ethers.utils.parseEther("0"), 42769);
+            await sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
         }
 
         const staking = STAKING_CONTRACT.connect(signer);
 
-        const tx = await staking.stake(amount);
-        await tx.wait();
+        const tx = await staking.populateTransaction.stake(amount);
+
+        let { elderMsg, elderFee } = getElderMsgAndFee(tx, elderAddress, 1000000, ethers.utils.parseEther("0"), 42769);
+        await sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
     };
 
     const handleWithdraw = async event => {

@@ -3,6 +3,13 @@ import React, { useEffect, useState } from "react";
 import DummyToken from "./components/dummyToken";
 import Staking from "./components/staking";
 import { provider } from "./web3";
+import { getElderClient } from "elderjs";
+
+const elderChainConfig = {
+    chainName: "devnet-1",
+    rpc: "http://66.179.189.178:26657",
+    rest: "http://66.179.189.178:1317",
+};
 
 const Balance = ({ account }) => {
     const [balance, setBalance] = useState("");
@@ -23,6 +30,8 @@ const Balance = ({ account }) => {
 
 function App() {
     const [account, setAccount] = useState(null);
+    const [elderAddress, setElderAddress] = useState(null);
+    var [elderClient, setElderClient] = useState(null);
 
     const checkAccounts = async () => {
         if (!window.ethereum) {
@@ -49,6 +58,16 @@ function App() {
 
     useEffect(() => {
         checkAccounts().then(setAccount).catch(console.error);
+
+        if (window.keplr) {
+            (async () => {
+                const { elderAddress, elderClient } = await getElderClient(
+                    elderChainConfig
+                );
+                setElderAddress(elderAddress);
+                setElderClient(elderClient);
+            })();
+        }
     }, []);
 
     return (
@@ -64,11 +83,25 @@ function App() {
                     Request Accounts
                 </button>
             )}
+            {elderAddress ? (
+                <p>
+                    Elder Account:{" "}
+                    <code style={{ display: "inline" }}>{elderAddress}</code>
+                </p>
+            ) : (
+                <button onClick={() => getElderClient(elderChainConfig)}>
+                    Request Elder Account
+                </button>
+            )}
             {provider && account && (
                 <>
                     <Balance account={account} />
                     <DummyToken account={account} />
-                    <Staking account={account} />
+                    <Staking
+                        account={account}
+                        elderAddress={elderAddress}
+                        elderClient={elderClient}
+                    />
                 </>
             )}
         </div>
