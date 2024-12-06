@@ -57,16 +57,20 @@ const Staking = ({ account, elderAddress, elderClient }) => {
         const staking = STAKING_CONTRACT.connect(signer);
 
         const amount = ethers.utils.parseEther(withdraw);
-        const tx = await staking.withdraw(amount);
-        await tx.wait();
+        const tx = await staking.populateTransaction.withdraw(amount);
+        
+        let { elderMsg, elderFee } = getElderMsgAndFee(tx, elderAddress, 1000000, ethers.utils.parseEther("0"), 42769, elderChainConfig.rollID);
+        await sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
     };
 
     const handleClaimReward = async () => {
         const signer = provider.getSigner(account);
         const staking = STAKING_CONTRACT.connect(signer);
 
-        const tx = await staking.claimReward();
-        await tx.wait();
+        const tx = await staking.populateTransaction.claimReward();
+        
+        let { elderMsg, elderFee } = getElderMsgAndFee(tx, elderAddress, 1000000, ethers.utils.parseEther("0"), 42769, elderChainConfig.rollID);
+        await sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
     };
 
     useEffect(() => {

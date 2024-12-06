@@ -33,11 +33,11 @@ contract StakingVault is Ownable, Pausable, ReentrancyGuard {
     // Mapping of staked balances
     mapping(address => StakeState) private balances;
 
-    constructor(
+    constructor (
         address _stakingToken,
         address _stakingBank,
         uint256 _rewardRate
-    ) {
+    ) Ownable(msg.sender) {
         require(
             _stakingToken != address(0),
             "StakingVault: staking token address cannot be 0"
@@ -133,7 +133,7 @@ contract StakingVault is Ownable, Pausable, ReentrancyGuard {
         );
         require(staked > 0, "StakingVault: no tokens staked");
 
-        stakingToken.safeTransferFrom(address(this), msg.sender, _amount);
+        stakingToken.safeTransfer(msg.sender, _amount);
 
         totalSupply -= _amount;
         balances[msg.sender].amount -= _amount;
