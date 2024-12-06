@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 import React, { useEffect, useState } from "react";
 import { DUMMY_TOKEN, provider, STAKING_CONTRACT } from "../web3";
 import { sendElderCustomTransaction, getElderMsgAndFee } from "elderjs";
+import {elderChainConfig} from "../App";
 
 const getStakingViews = async account => {
     const signer = provider.getSigner(account);
@@ -38,7 +39,7 @@ const Staking = ({ account, elderAddress, elderClient }) => {
             const tx = await dummyToken.populateTransaction.approve(STAKING_CONTRACT.address, amount);
 
             // getElderMsgAndFee(tx, elderAddress, rollappGasLimit, rollapValueTransfer, rollappChainID)
-            let { elderMsg, elderFee } = getElderMsgAndFee(tx, elderAddress, 1000000, ethers.utils.parseEther("0"), 42769);
+            let { elderMsg, elderFee } = getElderMsgAndFee(tx, elderAddress, 1000000, ethers.utils.parseEther("0"), 42769, elderChainConfig.rollID);
             await sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
         }
 
@@ -46,7 +47,7 @@ const Staking = ({ account, elderAddress, elderClient }) => {
 
         const tx = await staking.populateTransaction.stake(amount);
 
-        let { elderMsg, elderFee } = getElderMsgAndFee(tx, elderAddress, 1000000, ethers.utils.parseEther("0"), 42769);
+        let { elderMsg, elderFee } = getElderMsgAndFee(tx, elderAddress, 1000000, ethers.utils.parseEther("0"), 42769, elderChainConfig.rollID);
         await sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
     };
 

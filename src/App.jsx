@@ -5,10 +5,11 @@ import Staking from "./components/staking";
 import { provider } from "./web3";
 import { getElderClient } from "elderjs";
 
-const elderChainConfig = {
+export const elderChainConfig = {
     chainName: "devnet-1",
     rpc: "http://66.179.189.178:26657",
     rest: "http://66.179.189.178:1317",
+    rollID: 11,
 };
 
 const Balance = ({ account }) => {
