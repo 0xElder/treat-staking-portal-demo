@@ -1,6 +1,10 @@
 import { ethers } from "ethers";
 import React, { useEffect, useState } from "react";
-import { DUMMY_TOKEN, DUMMY_TOKEN_ADDRESS, provider } from "../web3";
+import {
+    DUMMY_TOKEN,
+    DUMMY_TOKEN_ADDRESS,
+    provider,
+} from "../../../../../web3";
 
 const getBalanceAndClaimed = async account => {
     const dummyToken = DUMMY_TOKEN.connect(provider);
