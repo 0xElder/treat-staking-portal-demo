@@ -4,6 +4,7 @@ import DummyToken from "./components/DummyToken";
 import { Balance } from "./components/Balance";
 import { provider } from "../../../web3";
 import AccountInfo from "./components/AccountInfo";
+// import ToggleBtn from "../../components/ToggleBtn";
 import "./styles.css";
 
 const Home = () => {
@@ -35,6 +36,7 @@ const Home = () => {
                     </div>
                 </>
             )}
+            {/* <ToggleBtn text="Enable" /> */}
         </div>
     );
 };
