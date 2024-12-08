@@ -92,14 +92,14 @@ const DummyToken = ({ account }) => {
                         <p>You have already claimed your DT</p>
                     ) : (
                         <button
-                            className="btn btn-small btn-outline"
+                            className="btn btn-small btn-sparkle btn-primary"
                             onClick={claim}
                         >
                             Claim DT
                         </button>
                     )}
                     <button
-                        className="btn btn-big btn-primary"
+                        className="btn btn-big btn-outline"
                         onClick={addDummyTokenToMetaMask}
                     >
                         Add to MetaMask

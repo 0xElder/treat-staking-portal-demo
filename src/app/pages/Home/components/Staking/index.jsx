@@ -80,7 +80,7 @@ const Staking = ({ account, elderAddress, elderClient }) => {
 
     if (!views.staked) {
         return (
-            <div className="card m-t-10">
+            <div className="card">
                 <h2>Staking</h2>
                 <p>Loading...</p>
             </div>
@@ -89,7 +89,7 @@ const Staking = ({ account, elderAddress, elderClient }) => {
 
     return (
        <div className="card m-t-10">
-            <div className="cardHeading">Staking</div>
+            <div className="cardHeading m-b-10">Staking</div>
             <div className="flexContainer flexDirectionColumn">
                 <div className="flexContainer justifyBetween m-t-10 stakingCardsContainer">
                     <div className="stakingCards">
@@ -133,7 +133,7 @@ const Staking = ({ account, elderAddress, elderClient }) => {
                         </div>
                     </form>
                     <div className="flexContainer m-t-15 claimReward">
-                        <button className="btn btn-primary" onClick={handleClaimReward}>Claim Reward</button>
+                        <button className="btn btn-primary btn-sparkle" onClick={handleClaimReward}>Claim Reward</button>
                     </div>
                 </div>
             </div>
