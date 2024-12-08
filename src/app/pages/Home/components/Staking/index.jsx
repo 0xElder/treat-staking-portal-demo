@@ -80,7 +80,7 @@ const Staking = ({ account, elderAddress, elderClient }) => {
 
     if (!views.staked) {
         return (
-            <div>
+            <div className="card m-t-10">
                 <h2>Staking</h2>
                 <p>Loading...</p>
             </div>
