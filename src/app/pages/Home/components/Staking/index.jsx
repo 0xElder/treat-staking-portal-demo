@@ -106,7 +106,7 @@ const Staking = ({ account, elderAddress, elderClient }) => {
                     </div>
                 </div>
                 <div className="flexContainer flexDirectionColumn">
-                    <form className="flexContainer gap-15 alignCenter m-t-15" onSubmit={handleStake}>
+                    <form className="flexContainer gap-15 alignCenter m-t-20" onSubmit={handleStake}>
                         <label htmlFor="stake" className="width80">Stake</label>
                         <input
                             id="stake"

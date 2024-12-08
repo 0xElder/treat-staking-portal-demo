@@ -70,6 +70,7 @@ button {
     border: 1px solid #51cf66;
     background-color: #171f2f;
     color: #51cf66;
+    border-radius: 20px;
 }
 .btn-outline:hover {
     background-color: #51cf66;
@@ -92,6 +93,7 @@ button {
     background-color: #51cf66;
     border: 1px solid #51cf66;
     color: #ffffff;
+    border-radius: 20px;
 }
 .btn-primary:hover {
     background-color: #00aa45;
