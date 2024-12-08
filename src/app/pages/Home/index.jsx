@@ -12,16 +12,18 @@ const Home = () => {
 
     return (
         <div>
-            <AccountInfo
-                account={account}
-                setAccount={setAccount}
-                elderAddress={elderAddress}
-                setElderAddress={setElderAddress}
-                setElderClient={setElderClient}
-            />
+            <div className="flexContainer">
+                <Balance account={account} />
+                <AccountInfo
+                    account={account}
+                    setAccount={setAccount}
+                    elderAddress={elderAddress}
+                    setElderAddress={setElderAddress}
+                    setElderClient={setElderClient}
+                />
+            </div>
             {provider && account && (
                 <>
-                    <Balance account={account} />
                     <DummyToken account={account} />
                     <Staking
                         account={account}
