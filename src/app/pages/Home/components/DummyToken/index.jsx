@@ -77,7 +77,7 @@ const DummyToken = ({ account }) => {
     return (
         <div className="card flexContainer alignCenter m-t-10">
             <div className="flexContainer m-r-50">
-                <MdOutlineToken size={60} />
+                <MdOutlineToken size={80} />
             </div>
             <div className="flexContainer flexDirectionColumn">
                 <div className="cardHeading">Dummy Token</div>

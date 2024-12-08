@@ -54,7 +54,7 @@ const AccountInfo = ({
         return (
             <div className="accountRow flexContainer alignCenter justifyBetween">
                 <div className="accountItem flexContainer alignCenter gap-10">
-                    <MdAccountBox size={18} />
+                    <MdAccountBox size={24} />
                     Account
                 </div>
                 {account ? (
@@ -73,7 +73,7 @@ const AccountInfo = ({
         return (
             <div className="accountRow flexContainer alignCenter justifyBetween">
                 <div className="accountItem flexContainer alignCenter gap-10">
-                    <MdFingerprint size={18} />
+                    <MdFingerprint size={24} />
                     Elder Account
                 </div>
                 {elderAddress ? (
@@ -98,7 +98,7 @@ const AccountInfo = ({
 
     const renderAccount = () => {
         return (
-            <div className="card cardWithNoBorder flexGrowTwo">
+            <div className="card cardWithNoBorder flexGrowOne">
                 {renderAccountRow()}
                 {renderElderAccountRow()}
             </div>

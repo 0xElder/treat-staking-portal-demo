@@ -91,20 +91,20 @@ const Staking = ({ account, elderAddress, elderClient }) => {
        <div className="card m-t-10">
             <div className="cardHeading">Staking</div>
             <div className="flexContainer flexDirectionColumn">
-                <div className="flexContainer justifyBetween">
-                    <p>
-                        <strong className="inlineBlock width100">Staked </strong> <span className="colorGreenLight amountFont">{views.staked} DT</span>
-                    </p>
-                    <p className="m-r-20">
-                        <strong className="inlineBlock width100">Total Staked </strong> <span className="colorGreenLight amountFont">{views.totalStaked} DT</span>
-                    </p>
+                <div className="flexContainer justifyBetween m-t-10 stakingCardsContainer">
+                    <div className="stakingCards">
+                        <div className="stakingCardsValue colorGreenLight">{views.staked} DT</div>
+                        <div className="stakingCardsLabel">Staked</div>
+                    </div>
+                    <div className="stakingCards">
+                        <div className="stakingCardsValue colorGreenLight">{views.reward} DT</div>
+                        <div className="stakingCardsLabel">Reward</div>
+                    </div>
+                    <div className="stakingCards">
+                        <div className="stakingCardsValue colorGreenLight">{views.totalStaked} DT</div>
+                        <div className="stakingCardsLabel">Total Staked</div>
+                    </div>
                 </div>
-                <div className="flexContainer justifyBetween m-b-15">
-                    <p>
-                        <strong className="inlineBlock width100">Reward </strong> <span className="colorGreenLight amountFont">{views.reward} DT</span>
-                    </p>
-                </div>
-                <div className="horizontalDivider"></div>
                 <div className="flexContainer flexDirectionColumn">
                     <form className="flexContainer gap-15 alignCenter m-t-15" onSubmit={handleStake}>
                         <label htmlFor="stake" className="width80">Stake</label>

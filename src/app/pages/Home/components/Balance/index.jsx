@@ -21,7 +21,7 @@ export const Balance = ({ account }) => {
     return (
         <div className="card cardWithNoBorder flexContainer flexDirectionColumn flexGrowOne">
             <div className="balanceText flexContainer align-center gap-10 m-t-10 m-b-5">
-                <MdAccountBalance size={20} color="#ddd" />
+                <MdAccountBalance size={24} color="#ddd" />
                 Your Balance
             </div>
             <div className="horizontalDivider"></div>

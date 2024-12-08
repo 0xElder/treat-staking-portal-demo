@@ -4,6 +4,7 @@ import DummyToken from "./components/DummyToken";
 import { Balance } from "./components/Balance";
 import { provider } from "../../../web3";
 import AccountInfo from "./components/AccountInfo";
+import "./styles.css";
 
 const Home = () => {
     const [account, setAccount] = useState(null);
@@ -11,7 +12,7 @@ const Home = () => {
     var [elderClient, setElderClient] = useState(null);
 
     return (
-        <div>
+        <div className="homeContainer">
             <div className="flexContainer gap-10 card">
                 <Balance account={account} />
                 <AccountInfo
@@ -24,12 +25,14 @@ const Home = () => {
             </div>
             {provider && account && (
                 <>
-                    <DummyToken account={account} />
-                    <Staking
-                        account={account}
-                        elderAddress={elderAddress}
-                        elderClient={elderClient}
-                    />
+                    <div className="flexContainer gap-20 m-t-10">
+                        <Staking
+                            account={account}
+                            elderAddress={elderAddress}
+                            elderClient={elderClient}
+                        />
+                        <DummyToken account={account} />
+                    </div>
                 </>
             )}
         </div>

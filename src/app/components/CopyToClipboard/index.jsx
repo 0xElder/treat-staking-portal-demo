@@ -22,7 +22,7 @@ const CopyToClipboard = ({ textToCopy }) => {
                 {copied ? (
                     <div className="colorGreenLight copiedText">Copied!</div>
                 ) : (
-                    <MdContentCopy size={18} color="#ddd" />
+                    <MdContentCopy size={24} color="#ddd" />
                 )}
             </button>
         </div>
