@@ -1,0 +1,75 @@
+/* Colors */
+/* 
+blue-lightest: #242d42;
+blue-light: #171f2f; 
+blue-dark: #0e1726;
+green-light: #51cf66;
+green-dark: #00aa45;
+*/
+.colorGreenLight {
+    color: #51cf66
+}
+
+/* Flex Global Styles */
+.flexContainer {
+    display: flex;
+}
+.flexDirectionColumn {
+    flex-direction: column;
+}
+.alignCenter {
+    align-items: center;
+}
+.justifyCenter {
+    justify-content: center;
+}
+.justifyBetween {
+    justify-content: space-between;
+}
+.flexGrowOne {
+    flex: 1;
+}
+.gap-5 {
+    gap: 5px;
+}
+.gap-10 {
+    gap: 10px;
+}
+
+/* Button Styles */
+.btn-outline {
+    border: 0.5px solid #51cf66;
+    background-color: #171f2f;
+    color: #51cf66;
+    transition: all 250ms ease-in-out;
+}
+.btn-outline:hover {
+    background-color: #51cf66;
+    color: #ffffff;
+}
+.btn-primary {
+    background-color: #51cf66;
+    border: 0.5px solid #51cf66;
+    color: #ffffff;
+    transition: all 250ms ease-in-out;
+}
+.btn-primary:hover {
+    background-color: #00aa45;
+}
+
+.horizontalDivider {
+    background-color: #242d42;
+    height: 2px;
+    margin: 5px 0px;
+}
+
+/* Card Layout */
+.card {
+    border: 0.5px solid #373a40;
+    background-color: #171f2f;
+    border-radius: 8px;
+    padding: 10px;
+}
+.card:hover {
+    background-color: #0e1726;
+}
