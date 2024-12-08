@@ -1,3 +1,8 @@
+.toggleBtnWrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 .toggleBtnWrapper .toggleBtn {
     transition: 0.25s ease-in-out;
     outline: 0;
@@ -52,9 +57,8 @@
     cursor: not-allowed;
 }
 .toggleBtnWrapper .toggleText {
-    margin-top: 10px;
-    color: var(--neutral-tint-1, #64748b);
-    font-size: 10px;
+    color: #ffffff;
+    font-size: 14px;
     font-weight: 400;
     line-height: 16px;
     text-align: center;
