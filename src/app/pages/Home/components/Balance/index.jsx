@@ -19,13 +19,13 @@ export const Balance = ({ account }) => {
         return <p>Loading...</p>;
     }
     return (
-        <div className="card flexContainer flexDirectionColumn flexGrowOne">
-            <div>
+        <div className="card cardWithNoBorder flexContainer flexDirectionColumn flexGrowOne">
+            <div className="balanceText flexContainer align-center gap-10 m-t-10 m-b-5">
                 <MdAccountBalance size={20} color="#ddd" />
+                Your Balance
             </div>
-            <div className="balanceText">Your Balance</div>
             <div className="horizontalDivider"></div>
-            <div className="colorGreenLight balanceAmount">{balance} tBNB</div>
+            <div className="colorGreenLight amountFont">{balance} tBNB</div>
         </div>
     );
 };

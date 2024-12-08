@@ -1,14 +1,15 @@
 /* Colors */
 /* 
-blue-lightest: #242d42;
-blue-light: #171f2f; 
-blue-dark: #0e1726;
-green-light: #51cf66;
-green-dark: #00aa45;
+    blue-lightest: #242d42;
+    blue-light: #171f2f; 
+    blue-dark: #0e1726;
+    green-light: #51cf66;
+    green-dark: #00aa45;
 */
 .colorGreenLight {
     color: #51cf66
 }
+
 
 /* Flex Global Styles */
 .flexContainer {
@@ -29,14 +30,36 @@ green-dark: #00aa45;
 .flexGrowOne {
     flex: 1;
 }
+.flexGrowTwo {
+    flex: 2
+}
 .gap-5 {
     gap: 5px;
 }
 .gap-10 {
     gap: 10px;
 }
+.gap-15 {
+    gap: 15px;
+}
+.gap-20 {
+    gap: 20px;
+}
+
 
 /* Button Styles */
+.btn {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    margin: unset;
+}
+.btn-small {
+    width: 130px;
+}
+.btn-big {
+    width: 190px;
+}
 .btn-outline {
     border: 0.5px solid #51cf66;
     background-color: #171f2f;
@@ -57,19 +80,104 @@ green-dark: #00aa45;
     background-color: #00aa45;
 }
 
-.horizontalDivider {
-    background-color: #242d42;
-    height: 2px;
-    margin: 5px 0px;
-}
 
 /* Card Layout */
 .card {
     border: 0.5px solid #373a40;
     background-color: #171f2f;
-    border-radius: 8px;
-    padding: 10px;
+    border-radius: 12px;
+    padding: 15px;
+    width: 600px;
+}
+.cardWithNoBorder {
+    border: unset;
 }
 .card:hover {
     background-color: #0e1726;
+}
+.cardHeading {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+/* Margins */
+.m-t-5 {
+    margin-top: 5px;
+}
+.m-t-10 {
+    margin-top: 10px;
+}
+.m-t-15 {
+    margin-top: 15px;
+}
+.m-b-5 {
+    margin-bottom: 5px;
+}
+.m-b-10 {
+    margin-bottom: 10px;
+}
+.m-b-15 {
+    margin-bottom: 15px;
+}
+.m-l-5 {
+    margin-left: 5px;
+}
+.m-l-10 {
+    margin-left: 10px;
+}
+.m-l-15 {
+    margin-left: 10px;
+}
+.m-r-20 {
+    margin-right: 20px;
+}
+.m-r-50 {
+    margin-right: 35px;
+}
+
+/* Global */
+body {
+    margin: 80px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #0e1726;
+}
+.horizontalDivider {
+    background-color: #242d42;
+    height: 2px;
+    margin: 5px 0px;
+}
+input {
+    background: #161b22;
+    border: 1px solid white;
+    margin: unset;
+}
+p {
+    margin: 15px 0px 0px 0px;
+}
+.fullWidth {
+    width: 100%;
+}
+.amountFont {
+    font-size: 18px;
+}
+.inlineBlock {
+    display: inline-block;
+}
+.width80 {
+    width: 80px;
+}
+.width100 {
+    width: 100px;
+}
+.width200 {
+    width: 200px;
+}
+.halfWidth {
+    width: 55%;
+}
+.borderBox {
+    box-sizing: border-box;
 }

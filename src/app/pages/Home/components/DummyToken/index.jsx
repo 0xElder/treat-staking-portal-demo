@@ -5,6 +5,7 @@ import {
     DUMMY_TOKEN_ADDRESS,
     provider,
 } from "../../../../../web3";
+import { MdOutlineToken } from "react-icons/md";
 
 const getBalanceAndClaimed = async account => {
     const dummyToken = DUMMY_TOKEN.connect(provider);
@@ -66,25 +67,45 @@ const DummyToken = ({ account }) => {
 
     if (!balance) {
         return (
-            <div>
-                <h2>Dummy Token</h2>
+            <div className="card">
+                <div className="cardHeading">Dummy Token</div>
                 <p>Loading...</p>
             </div>
         );
     }
 
     return (
-        <div>
-            <h2>Dummy Token</h2>
-            <p>
-                <strong>DummyToken balance:</strong> {balance} DT
-            </p>
-            {claimed ? (
-                <p>You have already claimed your DT</p>
-            ) : (
-                <button onClick={claim}>Claim DT</button>
-            )}
-            <button onClick={addDummyTokenToMetaMask}>Add to MetaMask</button>
+        <div className="card flexContainer alignCenter m-t-10">
+            <div className="flexContainer m-r-50">
+                <MdOutlineToken size={60} />
+            </div>
+            <div className="flexContainer flexDirectionColumn">
+                <div className="cardHeading">Dummy Token</div>
+                <p>
+                    <strong>Token Balance</strong>
+                    <span className="colorGreenLight amountFont m-l-5">
+                        {balance} DT
+                    </span>
+                </p>
+                <div className="flexContainer gap-15 m-t-15">
+                    {claimed ? (
+                        <p>You have already claimed your DT</p>
+                    ) : (
+                        <button
+                            className="btn btn-small btn-outline"
+                            onClick={claim}
+                        >
+                            Claim DT
+                        </button>
+                    )}
+                    <button
+                        className="btn btn-big btn-primary"
+                        onClick={addDummyTokenToMetaMask}
+                    >
+                        Add to MetaMask
+                    </button>
+                </div>
+            </div>
         </div>
     );
 };

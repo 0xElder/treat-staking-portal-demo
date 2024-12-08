@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Staking from "./components/Staking";
-import DummyToken from "./components/dummyToken";
+import DummyToken from "./components/DummyToken";
 import { Balance } from "./components/Balance";
 import { provider } from "../../../web3";
 import AccountInfo from "./components/AccountInfo";
@@ -12,7 +12,7 @@ const Home = () => {
 
     return (
         <div>
-            <div className="flexContainer">
+            <div className="flexContainer gap-10 card">
                 <Balance account={account} />
                 <AccountInfo
                     account={account}

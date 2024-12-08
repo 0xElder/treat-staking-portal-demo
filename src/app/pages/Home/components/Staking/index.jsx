@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { DUMMY_TOKEN, provider, STAKING_CONTRACT } from "../../../../../web3";
 import { sendElderCustomTransaction, getElderMsgAndFee } from "elderjs";
 import { ELDER_CHAIN_CONFIG } from "../../constants";
+import './styles.css';
 
 const getStakingViews = async account => {
     const signer = provider.getSigner(account);
@@ -87,41 +88,56 @@ const Staking = ({ account, elderAddress, elderClient }) => {
     }
 
     return (
-        <div>
-            <h2>Staking</h2>
-            <p>
-                <strong>Staked: </strong> {views.staked} DT
-            </p>
-            <p>
-                <strong>Reward: </strong> {views.reward} DT
-            </p>
-            <p>
-                <strong>Total Staked: </strong> {views.totalStaked} DT
-            </p>
-            <div style={{ display: "flex" }}>
-                <form onSubmit={handleStake}>
-                    <label htmlFor="stake">Stake</label>
-                    <input
-                        id="stake"
-                        placeholder="0.0 DT"
-                        value={stake}
-                        onChange={e => setStake(e.target.value)}
-                    />
-                    <button type="submit">Stake DT</button>
-                </form>
-                <form onSubmit={handleWithdraw}>
-                    <label htmlFor="withdraw">Withdraw</label>
-                    <input
-                        id="withdraw"
-                        placeholder="0.0 DT"
-                        value={withdraw}
-                        onChange={e => setWithdraw(e.target.value)}
-                    />
-                    <button type="submit">Withdraw DT</button>
-                </form>
+       <div className="card m-t-10">
+            <div className="cardHeading">Staking</div>
+            <div className="flexContainer flexDirectionColumn">
+                <div className="flexContainer justifyBetween">
+                    <p>
+                        <strong className="inlineBlock width100">Staked </strong> <span className="colorGreenLight amountFont">{views.staked} DT</span>
+                    </p>
+                    <p className="m-r-20">
+                        <strong className="inlineBlock width100">Total Staked </strong> <span className="colorGreenLight amountFont">{views.totalStaked} DT</span>
+                    </p>
+                </div>
+                <div className="flexContainer justifyBetween m-b-15">
+                    <p>
+                        <strong className="inlineBlock width100">Reward </strong> <span className="colorGreenLight amountFont">{views.reward} DT</span>
+                    </p>
+                </div>
+                <div className="horizontalDivider"></div>
+                <div className="flexContainer flexDirectionColumn">
+                    <form className="flexContainer gap-15 alignCenter m-t-15" onSubmit={handleStake}>
+                        <label htmlFor="stake" className="width80">Stake</label>
+                        <input
+                            id="stake"
+                            placeholder="0.0 DT"
+                            className="inlineBlock btn-small borderBox"
+                            value={stake}
+                            onChange={e => setStake(e.target.value)}
+                        />
+                        <div className="inlineBlock width200">
+                            <button type="submit" className="btn btn-outline btn-big borderBox">Stake DT</button>
+                        </div>
+                    </form>
+                    <form className="flexContainer gap-15 alignCenter m-t-15" onSubmit={handleWithdraw}>
+                        <label htmlFor="withdraw" className="width80">Withdraw</label>
+                        <input
+                            id="withdraw"
+                            className="inlineBlock btn-small borderBox"
+                            placeholder="0.0 DT"
+                            value={withdraw}
+                            onChange={e => setWithdraw(e.target.value)}
+                        />
+                        <div className="inlineBlock width200">
+                            <button type="submit" className="btn btn-outline btn-big borderBox">Withdraw DT</button>
+                        </div>
+                    </form>
+                    <div className="flexContainer m-t-15 claimReward">
+                        <button className="btn btn-primary" onClick={handleClaimReward}>Claim Reward</button>
+                    </div>
+                </div>
             </div>
-            <button onClick={handleClaimReward}>Claim Reward</button>
-        </div>
+       </div>
     );
 };
 
