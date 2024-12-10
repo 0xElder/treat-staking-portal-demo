@@ -89,7 +89,13 @@ const DummyToken = ({ account }) => {
             </div>
             <div className="buttonContainer flexContainer gap-15">
                 {claimed ? (
-                    <p>You have already claimed your SHIB</p>
+                    <button
+                        className="btn btn-claim btn-sparkle btn-primary"
+                        onClick={claim}
+                        disabled
+                    >
+                        Already Claimed!
+                    </button>
                 ) : (
                     <button
                         className="btn btn-claim btn-sparkle btn-primary"

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { getElderClient } from "elderjs";
-import { ELDER_CHAIN_CONFIG } from "../../constants";
+import { ELDER_CHAIN_CONFIG } from "../../../../../../constants";
 import { getMaskedValue } from "../../../../../utils/helper";
 import CopyToClipboard from "../../../../components/CopyToClipboard";
 import { MdAccountBox, MdFingerprint } from "react-icons/md";

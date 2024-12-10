@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { DUMMY_TOKEN, provider, STAKING_CONTRACT } from "../../../../../web3";
 import { sendElderCustomTransaction, getElderMsgAndFee } from "elderjs";
 import { formatNumber } from "../../../../../utils/helper";
-import { ELDER_CHAIN_CONFIG } from "../../constants";
+import { ELDER_CHAIN_CONFIG } from "../../../../../../constants";
 import './styles.css';
 
 const getStakingViews = async account => {
@@ -28,7 +28,6 @@ const Staking = ({ account, elderAddress, elderClient }) => {
     const [withdraw, setWithdraw] = useState("");
 
     const handleStake = async event => {
-        alert("test");
         event.preventDefault();
         const signer = provider.getSigner(account);
         const amount = ethers.utils.parseEther(stake);
@@ -108,7 +107,7 @@ const Staking = ({ account, elderAddress, elderClient }) => {
                     </div>
                 </div>
                 <div className="flexContainer flexDirectionColumn m-r-15 m-t-15">
-                    <div className="tableRow gap-15 m-t-40" onSubmit={handleStake}>
+                    <div className="tableRow gap-15 m-t-40">
                         <label htmlFor="stake" className="tableCell">STAKE</label>
                         <input
                             id="stake"
@@ -117,9 +116,9 @@ const Staking = ({ account, elderAddress, elderClient }) => {
                             value={stake}
                             onChange={e => setStake(e.target.value)}
                         />
-                        <button type="submit" className="tableCell btn btn-outline btn-big borderBox">Stake $SHIB</button>
+                        <button onClick={handleStake} className="tableCell btn btn-outline btn-big borderBox">Stake $SHIB</button>
                     </div>
-                    <div className="tableRow gap-15 m-t-15" onSubmit={handleWithdraw}>
+                    <div className="tableRow gap-15 m-t-15">
                         <label htmlFor="withdraw" className="tableCell">WITHDRAW</label>
                         <input
                             id="withdraw"
@@ -128,7 +127,7 @@ const Staking = ({ account, elderAddress, elderClient }) => {
                             value={withdraw}
                             onChange={e => setWithdraw(e.target.value)}
                         />
-                        <button type="submit" className="tableCell btn btn-outline btn-big borderBox">Withdraw $SHIB</button>
+                        <button onClick={handleWithdraw} className="tableCell btn btn-outline btn-big borderBox">Withdraw $SHIB</button>
                     </div>
                     <div className="tableRow gap-15 m-t-40 claimReward">
                         <button className="tableCell btn btn-primary btn-sparkle" onClick={handleClaimReward}>Claim Reward</button>
