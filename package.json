@@ -1,14 +1,14 @@
 {
-    "name": "dapp-with-react",
-    "description": "DeFi application with staking and custom ERC20 token and React.js frontend.",
+    "name": "shib-staking-portal-demo",
+    "description": "Demo app with React and Elderjs",
     "version": "0.0.1",
     "author": {
-        "name": "Atahan Yorgancı"
+        "name": ""
     },
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "https://github.com/atahanyorganci/dapp-with-react.git"
+        "url": "https://github.com/0xElder/shib-staking-portal-demo.git"
     },
     "scripts": {
         "dev": "vite",
@@ -20,7 +20,7 @@
         "@cosmjs/encoding": "^0.32.4",
         "@cosmjs/proto-signing": "^0.32.4",
         "@cosmjs/stargate": "^0.32.4",
-        "elderjs": "^1.0.5",
+        "elderjs": "^1.0.6",
         "ethers": "^5.7.2",
         "react": "^18.2.0",
         "react-dom": "^18.2.0"
@@ -51,6 +51,7 @@
         "hardhat": "^2.12.6",
         "hardhat-gas-reporter": "^1.0.8",
         "prettier": "^2.8.3",
+        "react-icons": "^4.9.0",
         "solidity-coverage": "^0.7.21",
         "typechain": "^8.1.0",
         "vite": "^3.2.5"

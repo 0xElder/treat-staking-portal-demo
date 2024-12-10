@@ -1,0 +1,12 @@
+.copyToClipboard {
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.copyToClipboard:focus {
+    box-shadow: none;
+}
+.copiedText {
+    font-size: 12px;
+}
