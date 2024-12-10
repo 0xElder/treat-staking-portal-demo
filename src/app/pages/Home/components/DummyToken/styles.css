@@ -1,0 +1,34 @@
+.textCenter {
+    text-align: center;
+}
+/* text size 30 */
+.textSize30 {
+    font-size: 30px;
+}
+/* heavy font */
+.fontHeavy600 {
+    font-weight: 600;
+}
+.textSize50 {
+    font-size: 50px;
+}
+.btn-claim {
+    width: 180px;
+}
+.flexDirectionColumn {
+    flex-direction: column;
+}
+
+.flexGrow {
+    flex-grow: 1;
+}
+
+.m-b-15 {
+    margin-bottom: 15px;
+}
+.shibLogo {
+    width: 100px; /* or whatever width you want */
+    height: auto; /* maintain aspect ratio */
+    margin: 15px auto; /* center horizontally, keep vertical spacing */
+    display: block; /* ensure the image behaves as a block-level element for centering */
+}

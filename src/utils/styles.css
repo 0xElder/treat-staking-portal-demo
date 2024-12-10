@@ -129,25 +129,29 @@ button {
 /* Card Layout */
 .card {
     border: 0.5px solid #373a40;
-    background-color: #171f2f;
+    background-color: #171f2fbb;
     border-radius: 20px;
-    padding: 15px;
+    padding: 30px;
     opacity: 0.9;
     box-shadow: 
     0 4px 10px rgba(0, 0, 0, 0.6),
     inset 0 1px 3px rgba(255, 255, 255, 0.2);
 }
 .cardWithNoBorder {
-    border: unset;
-    box-shadow: unset;
+    padding: 30px;
+    opacity: 0.9;
+    border: hidden;
+    background: transparent;
+    box-shadow: none;
 }
 .card:hover {
-    background-color: #0e1726;
+    background-color: #141b29d5;
 }
 .cardHeading {
     font-size: 24px;
-    font-weight: 700;
     line-height: 1.2;
+    text-align: center;
+    font-family: 'Ubuntu', sans-serif;
 }
 
 /* Margins */
@@ -163,6 +167,9 @@ button {
 .m-t-20 {
     margin-top: 20px;
 }
+.m-t-40 {
+    margin-top: 20px;
+}
 .m-b-5 {
     margin-bottom: 5px;
 }
@@ -171,6 +178,9 @@ button {
 }
 .m-b-15 {
     margin-bottom: 15px;
+}
+.m-b-25 {
+    margin-bottom: 25px;
 }
 .m-l-5 {
     margin-left: 5px;
@@ -190,6 +200,22 @@ button {
 .m-r-50 {
     margin-right: 35px;
 }
+.flexGrow {
+    flex-grow: 1;
+}
+
+.justifyContentSpaceBetween {
+    justify-content: space-between;
+}
+.tableRow {
+    display: flex;
+    width: 100%;
+}
+
+.tableCell {
+    flex: 1;
+    min-width: 0; /* This ensures that flex items can shrink below their content size if needed */
+}
 
 /* Global */
 body {
@@ -198,7 +224,14 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #0e1726;
+    background: linear-gradient(
+        to bottom right,
+        #080b0e,
+        #292442,
+        #564c9c,
+        #3b45ff,
+        #03018b 
+    );
     letter-spacing: 0.3px;
     height: 95vh;
     width: 100vw;
@@ -223,7 +256,7 @@ p {
     width: 100%;
 }
 .amountFont {
-    font-size: 18px;
+    font-size: 22px;
     font-weight: 600;
 }
 .inlineBlock {
@@ -244,3 +277,4 @@ p {
 .borderBox {
     box-sizing: border-box;
 }
+

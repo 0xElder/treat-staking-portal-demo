@@ -98,7 +98,7 @@ const AccountInfo = ({
 
     const renderAccount = () => {
         return (
-            <div className="card cardWithNoBorder flexGrowOne">
+            <div className="cardWithNoBorder flexGrowOne">
                 {renderAccountRow()}
                 {renderElderAccountRow()}
             </div>

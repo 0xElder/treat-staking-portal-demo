@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 import React, { useEffect, useState } from "react";
 import { DUMMY_TOKEN, provider, STAKING_CONTRACT } from "../../../../../web3";
 import { sendElderCustomTransaction, getElderMsgAndFee } from "elderjs";
+import { formatNumber } from "../../../../../utils/helper";
 import { ELDER_CHAIN_CONFIG } from "../../constants";
 import './styles.css';
 
@@ -27,6 +28,7 @@ const Staking = ({ account, elderAddress, elderClient }) => {
     const [withdraw, setWithdraw] = useState("");
 
     const handleStake = async event => {
+        alert("test");
         event.preventDefault();
         const signer = provider.getSigner(account);
         const amount = ethers.utils.parseEther(stake);
@@ -59,7 +61,7 @@ const Staking = ({ account, elderAddress, elderClient }) => {
 
         const amount = ethers.utils.parseEther(withdraw);
         const tx = await staking.populateTransaction.withdraw(amount);
-        
+
         let { elderMsg, elderFee } = getElderMsgAndFee(tx, elderAddress, 1000000, ethers.utils.parseEther("0"), 42769, ELDER_CHAIN_CONFIG.rollID);
         await sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
     };
@@ -69,7 +71,7 @@ const Staking = ({ account, elderAddress, elderClient }) => {
         const staking = STAKING_CONTRACT.connect(signer);
 
         const tx = await staking.populateTransaction.claimReward();
-        
+
         let { elderMsg, elderFee } = getElderMsgAndFee(tx, elderAddress, 1000000, ethers.utils.parseEther("0"), 42769, ELDER_CHAIN_CONFIG.rollID);
         await sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
     };
@@ -88,56 +90,52 @@ const Staking = ({ account, elderAddress, elderClient }) => {
     }
 
     return (
-       <div className="card m-t-10">
-            <div className="cardHeading m-b-10">Staking</div>
+        <div className="card m-t-10">
+            <div className="cardHeading m-b-25">STAKING</div>
             <div className="flexContainer flexDirectionColumn">
                 <div className="flexContainer justifyBetween m-t-10 stakingCardsContainer">
                     <div className="stakingCards">
-                        <div className="stakingCardsValue colorGreenLight">{views.staked} DT</div>
+                        <div className="stakingCardsValue colorGreenLight">{formatNumber(views.staked, 2)} $SHIB</div>
                         <div className="stakingCardsLabel">Staked</div>
                     </div>
                     <div className="stakingCards">
-                        <div className="stakingCardsValue colorGreenLight">{views.reward} DT</div>
+                        <div className="stakingCardsValue colorGreenLight">{formatNumber(views.reward, 2)} $SHIB</div>
                         <div className="stakingCardsLabel">Reward</div>
                     </div>
                     <div className="stakingCards">
-                        <div className="stakingCardsValue colorGreenLight">{views.totalStaked} DT</div>
+                        <div className="stakingCardsValue colorGreenLight">{formatNumber(views.totalStaked, 2)} $SHIB</div>
                         <div className="stakingCardsLabel">Total Staked</div>
                     </div>
                 </div>
-                <div className="flexContainer flexDirectionColumn">
-                    <form className="flexContainer gap-15 alignCenter m-t-20" onSubmit={handleStake}>
-                        <label htmlFor="stake" className="width80">Stake</label>
+                <div className="flexContainer flexDirectionColumn m-r-15 m-t-15">
+                    <div className="tableRow gap-15 m-t-40" onSubmit={handleStake}>
+                        <label htmlFor="stake" className="tableCell">STAKE</label>
                         <input
                             id="stake"
-                            placeholder="0.0 DT"
-                            className="inlineBlock btn-small borderBox"
+                            placeholder="0.0 $SHIB"
+                            className="tableCell btn-small borderBox"
                             value={stake}
                             onChange={e => setStake(e.target.value)}
                         />
-                        <div className="inlineBlock width200">
-                            <button type="submit" className="btn btn-outline btn-big borderBox">Stake DT</button>
-                        </div>
-                    </form>
-                    <form className="flexContainer gap-15 alignCenter m-t-15" onSubmit={handleWithdraw}>
-                        <label htmlFor="withdraw" className="width80">Withdraw</label>
+                        <button type="submit" className="tableCell btn btn-outline btn-big borderBox">Stake $SHIB</button>
+                    </div>
+                    <div className="tableRow gap-15 m-t-15" onSubmit={handleWithdraw}>
+                        <label htmlFor="withdraw" className="tableCell">WITHDRAW</label>
                         <input
                             id="withdraw"
-                            className="inlineBlock btn-small borderBox"
-                            placeholder="0.0 DT"
+                            className="tableCell btn-small borderBox"
+                            placeholder="0.0 $SHIB"
                             value={withdraw}
                             onChange={e => setWithdraw(e.target.value)}
                         />
-                        <div className="inlineBlock width200">
-                            <button type="submit" className="btn btn-outline btn-big borderBox">Withdraw DT</button>
-                        </div>
-                    </form>
-                    <div className="flexContainer m-t-15 claimReward">
-                        <button className="btn btn-primary btn-sparkle" onClick={handleClaimReward}>Claim Reward</button>
+                        <button type="submit" className="tableCell btn btn-outline btn-big borderBox">Withdraw $SHIB</button>
+                    </div>
+                    <div className="tableRow gap-15 m-t-40 claimReward">
+                        <button className="tableCell btn btn-primary btn-sparkle" onClick={handleClaimReward}>Claim Reward</button>
                     </div>
                 </div>
             </div>
-       </div>
+        </div>
     );
 };
 
