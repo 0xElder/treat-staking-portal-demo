@@ -1,4 +1,4 @@
-# Shib-Staking-Portal-Demo
+# Treat-Staking-Portal-Demo
 
 ## Table of Contents
 
@@ -9,7 +9,7 @@
 
 ## About <a name = "about"></a>
 
-This is a sample dapp created using ElderJS and React. It is a DEMO staking portal for the Shib token. It allows users to stake their Shib tokens and earn rewards. The rewards are distributed in the form of Shib tokens. The dapp also allows users to unstake their tokens and claim their rewards.
+This is a sample dapp created using ElderJS and React. It is a DEMO staking portal for the Treat token. It allows users to stake their Treat tokens and earn rewards. The rewards are distributed in the form of Treat tokens. The dapp also allows users to unstake their tokens and claim their rewards.
 
 ### Prerequisites <a name = "prerequisites"></a>
 

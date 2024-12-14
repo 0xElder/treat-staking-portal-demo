@@ -5,6 +5,7 @@ import { DUMMY_TOKEN, provider, STAKING_CONTRACT } from "../../../../../web3";
 import { sendElderCustomTransaction, getElderMsgAndFee } from "elderjs";
 import { formatNumber } from "../../../../../utils/helper";
 import { ELDER_CHAIN_CONFIG } from "../../../../../../constants";
+// import ToggleBtn from "../../../../components/ToggleBtn";
 import './styles.css';
 
 const getStakingViews = async account => {
@@ -26,6 +27,11 @@ const Staking = ({ account, elderAddress, elderClient }) => {
     const [views, setViews] = useState({});
     const [stake, setStake] = useState("");
     const [withdraw, setWithdraw] = useState("");
+    // const [isShibEnabled, setIsShibEnabled] = useState(false);
+
+    // const handleToggle = () => {
+    //     setIsShibEnabled(!isShibEnabled);
+    // };
 
     const handleStake = async event => {
         event.preventDefault();
@@ -91,18 +97,27 @@ const Staking = ({ account, elderAddress, elderClient }) => {
     return (
         <div className="card m-t-10">
             <div className="cardHeading m-b-25">STAKING</div>
+
+            {/* <div className="cardHeading m-b-25">
+                <ToggleBtn
+                    text1="Use $ELDER gasFee"
+                    text2="Use $SHIB gasFee"
+                    value={isShibEnabled}
+                    toggleValue={handleToggle}
+                    id="feature-toggle"
+                /> </div> */}
             <div className="flexContainer flexDirectionColumn">
                 <div className="flexContainer justifyBetween m-t-10 stakingCardsContainer">
                     <div className="stakingCards">
-                        <div className="stakingCardsValue colorGreenLight">{formatNumber(views.staked, 2)} $SHIB</div>
+                        <div className="stakingCardsValue colorGreenLight">{formatNumber(views.staked, 2)} $TREAT</div>
                         <div className="stakingCardsLabel">Staked</div>
                     </div>
                     <div className="stakingCards">
-                        <div className="stakingCardsValue colorGreenLight">{formatNumber(views.reward, 2)} $SHIB</div>
+                        <div className="stakingCardsValue colorGreenLight">{formatNumber(views.reward, 2)} $TREAT</div>
                         <div className="stakingCardsLabel">Reward</div>
                     </div>
                     <div className="stakingCards">
-                        <div className="stakingCardsValue colorGreenLight">{formatNumber(views.totalStaked, 2)} $SHIB</div>
+                        <div className="stakingCardsValue colorGreenLight">{formatNumber(views.totalStaked, 2)} $TREAT</div>
                         <div className="stakingCardsLabel">Total Staked</div>
                     </div>
                 </div>
@@ -111,23 +126,23 @@ const Staking = ({ account, elderAddress, elderClient }) => {
                         <label htmlFor="stake" className="tableCell">STAKE</label>
                         <input
                             id="stake"
-                            placeholder="0.0 $SHIB"
+                            placeholder="0.0 $TREAT"
                             className="tableCell btn-small borderBox"
                             value={stake}
                             onChange={e => setStake(e.target.value)}
                         />
-                        <button onClick={handleStake} className="tableCell btn btn-outline btn-big borderBox">Stake $SHIB</button>
+                        <button onClick={handleStake} className="tableCell btn btn-outline btn-big borderBox">Stake $TREAT</button>
                     </div>
                     <div className="tableRow gap-15 m-t-15">
                         <label htmlFor="withdraw" className="tableCell">WITHDRAW</label>
                         <input
                             id="withdraw"
                             className="tableCell btn-small borderBox"
-                            placeholder="0.0 $SHIB"
+                            placeholder="0.0 $TREAT"
                             value={withdraw}
                             onChange={e => setWithdraw(e.target.value)}
                         />
-                        <button onClick={handleWithdraw} className="tableCell btn btn-outline btn-big borderBox">Withdraw $SHIB</button>
+                        <button onClick={handleWithdraw} className="tableCell btn btn-outline btn-big borderBox">Withdraw $TREAT</button>
                     </div>
                     <div className="tableRow gap-15 m-t-40 claimReward">
                         <button className="tableCell btn btn-primary btn-sparkle" onClick={handleClaimReward}>Claim Reward</button>

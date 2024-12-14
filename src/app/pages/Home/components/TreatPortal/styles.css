@@ -1,10 +1,10 @@
-.shibStakingPortal {
+.treatStakingPortal {
     /* Assuming the base classes already set flex properties */
     align-items: center; /* Center items in the flex container */
     justify-content: center; /* Center content vertically if there's extra space */
 }
 
-.shibStakingPortal h1 {
+.treatStakingPortal h1 {
     font-size: 2.5em; /* Adjust to your preference */
     font-weight: bold; /* Bold text */
     margin: 0; /* Remove default margins */

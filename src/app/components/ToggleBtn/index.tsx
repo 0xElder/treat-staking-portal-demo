@@ -1,9 +1,10 @@
 import React from 'react';
 import './styles.css';
 
-const ToggleBtn = ({ text, value, toggleValue, id }) => {
+const ToggleBtn = ({ text1, text2, value, toggleValue, id }) => {
     return (
         <div className="toggleBtnWrapper">
+            <div className="toggleText">{text1}</div>
             <div className="toggleBtn">
                 <input
                     type="checkbox"
@@ -13,7 +14,7 @@ const ToggleBtn = ({ text, value, toggleValue, id }) => {
                 />
                 <label className="toggleLabel" htmlFor={`checkbox-${id}`} id={`checkbox-${id}`} />
             </div>
-            <div className="toggleText">{text}</div>
+            <div className="toggleText">{text2}</div>
         </div>
     )
 }

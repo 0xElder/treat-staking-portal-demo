@@ -83,7 +83,7 @@ const DummyToken = ({ account }) => {
                 <p className="textCenter textSize30 m-t-15">
                     <strong>TOKEN BALANCE</strong> <br />
                     <span className="colorGreenLight amountFont m-l-5">
-                        {balance} $SHIB
+                        {balance} $TREAT
                     </span>
                 </p>
             </div>
@@ -101,7 +101,7 @@ const DummyToken = ({ account }) => {
                         className="btn btn-claim btn-sparkle btn-primary"
                         onClick={claim}
                     >
-                        Claim $SHIB
+                        Claim $TREAT
                     </button>
                 )}
                 <button
