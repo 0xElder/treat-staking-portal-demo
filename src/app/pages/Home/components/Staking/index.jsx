@@ -23,7 +23,7 @@ const getStakingViews = async account => {
     };
 };
 
-const Staking = ({ account, elderAddress, elderClient }) => {
+const Staking = ({ account, elderAddress, elderClient, elderAccountNumber }) => {
     const [views, setViews] = useState({});
     const [stake, setStake] = useState("");
     const [withdraw, setWithdraw] = useState("");
@@ -47,7 +47,7 @@ const Staking = ({ account, elderAddress, elderClient }) => {
             const tx = await dummyToken.populateTransaction.approve(STAKING_CONTRACT.address, amount);
 
             // getElderMsgAndFee(tx, elderAddress, rollappGasLimit, rollapValueTransfer, rollappChainID)
-            let { elderMsg, elderFee } = getElderMsgAndFee(tx, elderAddress, 1000000, ethers.utils.parseEther("0"), 42769, ELDER_CHAIN_CONFIG.rollID);
+            let { elderMsg, elderFee } = getElderMsgAndFee(tx, elderAddress, 1000000, ethers.utils.parseEther("0"), 42769, ELDER_CHAIN_CONFIG.rollID, elderAccountNumber);
             await sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
         }
 
@@ -55,7 +55,7 @@ const Staking = ({ account, elderAddress, elderClient }) => {
 
         const tx = await staking.populateTransaction.stake(amount);
 
-        let { elderMsg, elderFee } = getElderMsgAndFee(tx, elderAddress, 1000000, ethers.utils.parseEther("0"), 42769, ELDER_CHAIN_CONFIG.rollID);
+        let { elderMsg, elderFee } = getElderMsgAndFee(tx, elderAddress, 1000000, ethers.utils.parseEther("0"), 42769, ELDER_CHAIN_CONFIG.rollID, elderAccountNumber);
         await sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
     };
 
@@ -67,7 +67,7 @@ const Staking = ({ account, elderAddress, elderClient }) => {
         const amount = ethers.utils.parseEther(withdraw);
         const tx = await staking.populateTransaction.withdraw(amount);
 
-        let { elderMsg, elderFee } = getElderMsgAndFee(tx, elderAddress, 1000000, ethers.utils.parseEther("0"), 42769, ELDER_CHAIN_CONFIG.rollID);
+        let { elderMsg, elderFee } = getElderMsgAndFee(tx, elderAddress, 1000000, ethers.utils.parseEther("0"), 42769, ELDER_CHAIN_CONFIG.rollID, elderAccountNumber);
         await sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
     };
 
@@ -77,7 +77,7 @@ const Staking = ({ account, elderAddress, elderClient }) => {
 
         const tx = await staking.populateTransaction.claimReward();
 
-        let { elderMsg, elderFee } = getElderMsgAndFee(tx, elderAddress, 1000000, ethers.utils.parseEther("0"), 42769, ELDER_CHAIN_CONFIG.rollID);
+        let { elderMsg, elderFee } = getElderMsgAndFee(tx, elderAddress, 1000000, ethers.utils.parseEther("0"), 42769, ELDER_CHAIN_CONFIG.rollID, elderAccountNumber);
         await sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
     };
 

@@ -12,6 +12,7 @@ const Home = () => {
     const [account, setAccount] = useState(null);
     const [elderAddress, setElderAddress] = useState(null);
     var [elderClient, setElderClient] = useState(null);
+    const [elderAccountNumber, setElderAccountNumber] = useState(null);
 
     return (
         <div className="homeContainer">
@@ -26,6 +27,7 @@ const Home = () => {
                     elderAddress={elderAddress}
                     setElderAddress={setElderAddress}
                     setElderClient={setElderClient}
+                    setElderAccountNumber={setElderAccountNumber}
                 />
             </div>
             {provider && account && (
@@ -35,6 +37,7 @@ const Home = () => {
                             account={account}
                             elderAddress={elderAddress}
                             elderClient={elderClient}
+                            elderAccountNumber={elderAccountNumber}
                         />
                         <DummyToken account={account} />
                     </div>
