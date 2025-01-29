@@ -12,17 +12,19 @@ const AccountInfo = ({
     elderAddress,
     setElderAddress,
     setElderClient,
+    setElderAccountNumber,
 }) => {
     useEffect(() => {
         checkAccounts().then(setAccount).catch(console.error);
 
         if (window.keplr) {
             (async () => {
-                const { elderAddress, elderClient } = await getElderClient(
-                    ELDER_CHAIN_CONFIG
-                );
+                const { elderAddress, elderClient, elderAccountNumber } =
+                    await getElderClient(ELDER_CHAIN_CONFIG);
+                console.log(elderAddress, elderClient, elderAccountNumber);
                 setElderAddress(elderAddress);
                 setElderClient(elderClient);
+                setElderAccountNumber(elderAccountNumber);
             })();
         }
     }, []);
