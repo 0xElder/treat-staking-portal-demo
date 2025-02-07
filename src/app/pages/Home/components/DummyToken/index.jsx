@@ -5,6 +5,8 @@ import {
     DUMMY_TOKEN_ADDRESS,
     provider,
 } from "../../../../../web3";
+import { sendElderCustomTransaction, getElderMsgAndFee } from "elderjs";
+import { ELDER_CHAIN_CONFIG } from "../../../../../../constants";
 // import { MdOutlineToken } from "react-icons/md";
 import "./styles.css";
 import shibLogo from "./shiba-inu-shib-logo.png";
@@ -39,16 +41,38 @@ const addDummyTokenToMetaMask = async () => {
     }
 };
 
-const DummyToken = ({ account }) => {
+const DummyToken = ({
+    account,
+    elderAddress,
+    elderClient,
+    elderAccountNumber,
+}) => {
     const [balance, setBalance] = useState("");
     const [claimed, setClaimed] = useState(false);
 
     const claim = async () => {
         const signer = provider.getSigner();
         const dummyToken = DUMMY_TOKEN.connect(signer);
-        const tx = await dummyToken.claim();
-        const receipt = await tx.wait();
-        console.log(receipt);
+        const tx = await dummyToken.populateTransaction.claim();
+
+        let { elderMsg, elderFee } = getElderMsgAndFee(
+            tx,
+            elderAddress,
+            1000000,
+            ethers.utils.parseEther("0"),
+            42769,
+            ELDER_CHAIN_CONFIG.rollID,
+            elderAccountNumber
+        );
+        await sendElderCustomTransaction(
+            elderAddress,
+            elderClient,
+            elderMsg,
+            elderFee
+        );
+
+        // const receipt = await tx.wait();
+        // console.log(receipt);
 
         getBalanceAndClaimed(account, provider)
             .then(([balance, claimed]) => {
