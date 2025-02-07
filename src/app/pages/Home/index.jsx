@@ -39,7 +39,12 @@ const Home = () => {
                             elderClient={elderClient}
                             elderAccountNumber={elderAccountNumber}
                         />
-                        <DummyToken account={account} />
+                        <DummyToken
+                            account={account}
+                            elderAddress={elderAddress}
+                            elderClient={elderClient}
+                            elderAccountNumber={elderAccountNumber}
+                        />
                     </div>
                 </>
             )}
