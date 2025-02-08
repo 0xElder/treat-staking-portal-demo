@@ -2,11 +2,17 @@
 import { ethers } from "ethers";
 import React, { useEffect, useState } from "react";
 import { DUMMY_TOKEN, provider, STAKING_CONTRACT } from "../../../../../web3";
-import { sendElderCustomTransaction, getElderMsgAndFee } from "elderjs";
+import { sendElderCustomTransaction, getElderMsgAndFee, chainMap } from "elderjs";
 import { formatNumber } from "../../../../../utils/helper";
 import { ELDER_CHAIN_CONFIG } from "../../../../../../constants";
+import { Registry } from "@cosmjs/proto-signing";
+import { MsgSubmitRollTx } from "./elder_proto/dist/router/tx.js";
+import { ElderDirectSecp256k1Wallet } from "../../../../../utils/elderDirectSigner.ts";
+import { makeSignDoc, makeAuthInfoBytes, encodeSecp256k1Signature } from "@cosmjs/proto-signing"
 // import ToggleBtn from "../../../../components/ToggleBtn";
 import './styles.css';
+
+const customMessageTypeUrl = "/elder.router.MsgSubmitRollTx";
 
 const getStakingViews = async account => {
     const signer = provider.getSigner(account);
@@ -68,7 +74,66 @@ const Staking = ({ account, elderAddress, elderClient, elderAccountNumber }) => 
         const tx = await staking.populateTransaction.withdraw(amount);
 
         let { elderMsg, elderFee } = getElderMsgAndFee(tx, elderAddress, 1000000, ethers.utils.parseEther("0"), 42769, ELDER_CHAIN_CONFIG.rollID, elderAccountNumber);
-        await sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
+        // await sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
+
+        try {
+            const [account] = await window.ethereum.request({
+                method: "eth_accounts",
+            });
+            // Sign with MetaMask
+            const sig = await window.ethereum.request({
+                method: 'personal_sign',
+                params: [JSON.stringify(elderMsg), account]
+            });
+            console.log("Signature:", sig);
+            const msgHash = ethers.utils.hashMessage(JSON.stringify(elderMsg));
+            const msgHashBytes = ethers.utils.arrayify(msgHash);
+            const recoveredPublicKey = ethers.utils.recoverPublicKey(msgHashBytes, sig);
+
+            const compressedPublicKey = ethers.utils.computePublicKey(recoveredPublicKey, true);
+
+            console.log("Recovered Public Key:", compressedPublicKey);
+
+            let elderAccount = await elderClient.getAccount(elderAddress);
+            let elderAccSeq = elderAccount.sequence.toString();
+
+            const authInfoBytes = makeAuthInfoBytes(
+                [{ compressedPublicKey, elderAccSeq }],
+                elderFee.amount,
+                elderFee.gas,
+                undefined,
+                undefined,
+            );
+
+            const registry = new Registry();
+            registry.register(customMessageTypeUrl, MsgSubmitRollTx);
+
+            const txBodyBytes = registry.encode(elderMsg);
+            const chainId = chainMap.get(ELDER_CHAIN_CONFIG.chainName).chainId;
+
+            const signDoc = makeSignDoc(txBodyBytes, authInfoBytes, chainId, elderAccountNumber);
+
+            const signingWallet = new ElderDirectSecp256k1Wallet.fromCompressedPublicKey(compressedPublicKey);
+            const { signature } = await signingWallet.signDirect(elderAddress, signDoc);
+
+            console.log("Sign Response:", signature);
+
+            const txRaw = {
+                bodyBytes: signDoc.bodyBytes,
+                authInfoBytes: signDoc.authInfoBytes,
+                signatures: [encodeSecp256k1Signature(compressedPublicKey, signature.signature)]
+              };
+
+            try {
+                const broadcastResult = await elderClient.broadcastTx(txRaw);
+                console.log('Transaction broadcasted:', broadcastResult);
+              } catch (error) {
+                console.error('Error broadcasting transaction:', error);
+              }
+
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     const handleClaimReward = async () => {
