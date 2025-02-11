@@ -2,17 +2,41 @@
 import { ethers } from "ethers";
 import React, { useEffect, useState } from "react";
 import { DUMMY_TOKEN, provider, STAKING_CONTRACT } from "../../../../../web3";
-import { sendElderCustomTransaction, getElderMsgAndFee, chainMap } from "elderjs";
+import { sendElderCustomTransaction, getElderMsgAndFee } from "elderjs";
+import { chainMap } from "elderjs/chains.js";
 import { formatNumber } from "../../../../../utils/helper";
 import { ELDER_CHAIN_CONFIG } from "../../../../../../constants";
 import { Registry } from "@cosmjs/proto-signing";
 import { MsgSubmitRollTx } from "./elder_proto/dist/router/tx.js";
-import { ElderDirectSecp256k1Wallet } from "../../../../../utils/elderDirectSigner.ts";
-import { makeSignDoc, makeAuthInfoBytes, encodeSecp256k1Signature } from "@cosmjs/proto-signing"
+import { ElderDirectSecp256k1Wallet } from "../../../../../utils/ElderDirectSigner.ts";
+import { makeSignDoc, makeAuthInfoBytes,encodePubkey } from "@cosmjs/proto-signing"
+// import { encodeSecp256k1Signature } from "@cosmjs/amino";
+import { toBase64,fromBase64 } from "@cosmjs/encoding";
+import { SignMode } from "cosmjs-types/cosmos/tx/signing/v1beta1/signing";
 // import ToggleBtn from "../../../../components/ToggleBtn";
 import './styles.css';
 
 const customMessageTypeUrl = "/elder.router.MsgSubmitRollTx";
+
+
+function hexToUint8Array(hexString) {
+    // Remove the '0x' prefix if it exists
+    hexString = hexString.replace(/^0x/, '');
+  
+    // Ensure the length is even
+    if (hexString.length % 2 !== 0) {
+      throw new Error('Hex string must have an even number of characters');
+    }
+  
+    // Convert the hex string to a Uint8Array
+    const byteArray = new Uint8Array(hexString.length / 2);
+    for (let i = 0; i < byteArray.length; i++) {
+      byteArray[i] = parseInt(hexString.substr(i * 2, 2), 16);
+    }
+  
+    return byteArray;
+  }
+
 
 const getStakingViews = async account => {
     const signer = provider.getSigner(account);
@@ -90,20 +114,43 @@ const Staking = ({ account, elderAddress, elderClient, elderAccountNumber }) => 
             const msgHashBytes = ethers.utils.arrayify(msgHash);
             const recoveredPublicKey = ethers.utils.recoverPublicKey(msgHashBytes, sig);
 
-            const compressedPublicKey = ethers.utils.computePublicKey(recoveredPublicKey, true);
+            const uncompressedPublicKey = ethers.utils.computePublicKey(recoveredPublicKey, false);
+            console.log("Uncompressed Public Key:", uncompressedPublicKey);
 
+            const compressedPublicKey = ethers.utils.computePublicKey(recoveredPublicKey, true);
             console.log("Recovered Public Key:", compressedPublicKey);
 
             let elderAccount = await elderClient.getAccount(elderAddress);
             let elderAccSeq = elderAccount.sequence.toString();
 
-            const authInfoBytes = makeAuthInfoBytes(
-                [{ compressedPublicKey, elderAccSeq }],
-                elderFee.amount,
-                elderFee.gas,
-                undefined,
-                undefined,
-            );
+            var pubKeyBytes = hexToUint8Array(compressedPublicKey.slice(2));
+
+            const pubkey = encodePubkey({
+                type: "tendermint/PubKeySecp256k1",
+                value: toBase64(pubKeyBytes),
+            });
+
+            console.log("Pubkey:", pubkey);
+
+            var authInfoBytes
+            console.log("compressedPublicKey:", compressedPublicKey);
+            console.log("elderAccSeq:", elderAccSeq);
+            console.log("elderFee:", elderFee.amount);
+            console.log("elderFee:", elderFee.gas);
+            try {
+                authInfoBytes = makeAuthInfoBytes(
+                    [{ pubkey, sequence: elderAccSeq }],
+                    elderFee.amount,
+                    elderFee.gas,
+                    undefined,
+                    undefined,
+                    SignMode.SIGN_MODE_DIRECT,
+                );
+            } catch (error) {
+                console.error("Error making Auth Info Bytes:", error);
+            }
+
+            console.log("Auth Info Bytes:", authInfoBytes);
 
             const registry = new Registry();
             registry.register(customMessageTypeUrl, MsgSubmitRollTx);
@@ -113,7 +160,7 @@ const Staking = ({ account, elderAddress, elderClient, elderAccountNumber }) => 
 
             const signDoc = makeSignDoc(txBodyBytes, authInfoBytes, chainId, elderAccountNumber);
 
-            const signingWallet = new ElderDirectSecp256k1Wallet.fromCompressedPublicKey(compressedPublicKey);
+            const signingWallet = await ElderDirectSecp256k1Wallet.fromCompressedPublicKey(pubKeyBytes);
             const { signature } = await signingWallet.signDirect(elderAddress, signDoc);
 
             console.log("Sign Response:", signature);
@@ -121,10 +168,11 @@ const Staking = ({ account, elderAddress, elderClient, elderAccountNumber }) => 
             const txRaw = {
                 bodyBytes: signDoc.bodyBytes,
                 authInfoBytes: signDoc.authInfoBytes,
-                signatures: [encodeSecp256k1Signature(compressedPublicKey, signature.signature)]
+                signatures:[fromBase64(signature.signature)]
               };
 
             try {
+                console.log("Broadcasting Transaction...", txRaw);
                 const broadcastResult = await elderClient.broadcastTx(txRaw);
                 console.log('Transaction broadcasted:', broadcastResult);
               } catch (error) {
