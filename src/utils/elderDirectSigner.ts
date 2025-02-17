@@ -64,6 +64,7 @@ export class ElderDirectSecp256k1Wallet implements OfflineDirectSigner {
     private get address(): string {
         console.log("pubkey:", this.pubkey);
         console.log("rawSecp256k1PubkeyToRawAddress(this.pubkey):", rawSecp256k1PubkeyToRawAddress(this.pubkey));
+        console.log("prefix: ", this.prefix)
         console.log("toBech32(this.prefix, rawSecp256k1PubkeyToRawAddress(this.pubkey)):", toBech32(this.prefix, rawSecp256k1PubkeyToRawAddress(this.pubkey)));
         return toBech32(this.prefix, rawSecp256k1PubkeyToRawAddress(this.pubkey));
     }
@@ -80,6 +81,7 @@ export class ElderDirectSecp256k1Wallet implements OfflineDirectSigner {
 
     public async signDirect(address: string, signDoc: SignDoc): Promise<DirectSignResponse> {
         const signBytes = makeSignBytes(signDoc);
+        console.log("this.address ", this.address)
         if (address !== this.address) {
             throw new Error(`Address ${address} not found in wallet`);
         }

@@ -20,6 +20,7 @@
         "@cosmjs/encoding": "^0.32.4",
         "@cosmjs/proto-signing": "^0.32.4",
         "@cosmjs/stargate": "^0.32.4",
+        "@okxweb3/crypto-lib": "^1.0.1",
         "elderjs": "^1.2.4",
         "ethers": "^5.7.2",
         "react": "^18.2.0",

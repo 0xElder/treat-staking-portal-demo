@@ -6,8 +6,8 @@
 // };
 
 export const ELDER_CHAIN_CONFIG = {
-    chainName: "devnet-2",
-    rpc: "http://192.168.31.83:26657",
-    rest: "http://192.168.31.83:1317",
-    rollID: 2,
+    chainName: "devnet-4",
+    rpc: "http://127.0.0.1:26657",
+    rest: "http://127.0.0.1:1317",
+    rollID: 1,
 };
