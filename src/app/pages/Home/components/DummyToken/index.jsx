@@ -17,7 +17,7 @@ const getBalanceAndClaimed = async account => {
         dummyToken.balanceOf(account),
         dummyToken.hasClaimed(account),
     ]);
-    return [ethers.utils.formatEther(balance), claimed];
+    return [ethers.formatEther(balance), claimed];
 };
 
 const addDummyTokenToMetaMask = async () => {
@@ -42,10 +42,7 @@ const addDummyTokenToMetaMask = async () => {
 };
 
 const DummyToken = ({
-    account,
-    elderAddress,
-    elderClient,
-    elderAccountNumber,
+    account, elderAddress, elderClient, elderAccountNumber, elderAccountSequence, elderPubkicKey, setElderAccountSequence
 }) => {
     const [balance, setBalance] = useState("");
     const [claimed, setClaimed] = useState(false);
@@ -53,23 +50,13 @@ const DummyToken = ({
     const claim = async () => {
         const signer = provider.getSigner();
         const dummyToken = DUMMY_TOKEN.connect(signer);
-        const tx = await dummyToken.populateTransaction.claim();
+        const tx = await dummyToken.claim.populateTransaction();
 
-        let { elderMsg, elderFee } = getElderMsgAndFee(
-            tx,
-            elderAddress,
-            1000000,
-            ethers.utils.parseEther("0"),
-            42769,
-            ELDER_CHAIN_CONFIG.rollID,
-            elderAccountNumber
-        );
-        await sendElderCustomTransaction(
-            elderAddress,
-            elderClient,
-            elderMsg,
-            elderFee
-        );
+        let { elderMsg, elderFee, tx_hash } = getElderMsgAndFee(tx, elderAddress, 1000000, ethers.parseEther("0"), ELDER_CHAIN_CONFIG.rollChainID, ELDER_CHAIN_CONFIG.rollID, elderAccountNumber, elderPubkicKey, elderAccountSequence);
+        await sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
+        setElderAccountSequence(elderAccountSequence + 1);
+
+        toast.success(`Claim Treat Transaction Hash: ${tx_hash}`);
 
         // const receipt = await tx.wait();
         // console.log(receipt);
