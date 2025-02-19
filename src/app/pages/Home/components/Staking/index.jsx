@@ -7,19 +7,22 @@ import { formatNumber } from "../../../../../utils/helper";
 import { ELDER_CHAIN_CONFIG } from "../../../../../../constants";
 import { Registry } from "@cosmjs/proto-signing";
 import { MsgSubmitRollTx } from "./elder_proto/router/tx.ts";
-import { PubKey } from "./elder_proto/crypto/eldersecp256k1/keys.ts";
+import { PubKey } from "./elder_proto/crypto/ethsecp256k1/keys.ts";
 import { ElderDirectSecp256k1Wallet } from "../../../../../utils/ElderDirectSigner.ts";
-import { makeAuthInfoBytes} from "@cosmjs/proto-signing"
+// import { makeAuthInfoBytes} from "@cosmjs/proto-signing"
 import { SigningStargateClient } from "@cosmjs/stargate";
-import { TxRaw } from "cosmjs-types/cosmos/tx/v1beta1/tx";
+import { AuthInfo, TxRaw, TxBody, Fee} from "cosmjs-types/cosmos/tx/v1beta1/tx";
+import { Buffer } from "buffer";
+import { makeSignDoc, makeSignBytes } from "@cosmjs/proto-signing"
+
 
 // import { encodeSecp256k1Signature } from "@cosmjs/amino";
-import { toBase64,fromBase64 } from "@cosmjs/encoding";
+import { fromBase64, toBase64 } from "@cosmjs/encoding";
 import { SignMode } from "cosmjs-types/cosmos/tx/signing/v1beta1/signing";
 import './styles.css';
 
 const customMessageTypeUrl = "/elder.router.MsgSubmitRollTx";
-const customelderpubsecp = "/elder.crypto.eldersecp256k1.PubKey"
+const customelderpubsecp = "/elder.crypto.ethsecp256k1.PubKey";
 
 
 function hexToUint8Array(hexString) {
@@ -100,7 +103,7 @@ const Staking = ({ account, elderAddress, elderClient, elderAccountNumber }) => 
         const amount = ethers.utils.parseEther(withdraw);
         const tx = await staking.populateTransaction.withdraw(amount);
 
-        elderAddress = "elder1u4eyy23fw6l79d75y7uhffj26auhsm3ac8k588"
+        elderAddress = "elder1zwpjy8nj24g5y45yz9taup6nete0mftn6q30qk"
 
         let { elderMsg, elderFee } = getElderMsgAndFee(tx, elderAddress, 1000000, ethers.utils.parseEther("0"), 42769, ELDER_CHAIN_CONFIG.rollID, 0);
         // await sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
@@ -138,12 +141,17 @@ const Staking = ({ account, elderAddress, elderClient, elderAccountNumber }) => 
             //     value: pubKeyBytes,
             // });
 
-            const pubkey = registry.encode({
-                typeUrl: customMessageTypeUrl,
-                value: PubKey.encode({
-                    key: pubKeyBytes
-            }),
-            })
+            const pubkey = PubKey.encode(PubKey.fromPartial({
+                    key: pubKeyBytes,
+            })).finish()
+
+            console.log("PUBKEY1 ", pubKeyBytes)
+            console.log("PUBKEY2 ", pubkey)
+
+            const pubk = {
+                typeUrl: customelderpubsecp,
+                value: pubkey,
+            }
 
             // const pubkey = {
             //     typeUrl: customelderpubsecp,
@@ -156,52 +164,87 @@ const Staking = ({ account, elderAddress, elderClient, elderAccountNumber }) => 
 
             console.log("Pubkey:", pubkey);
 
-            var authInfoBytes
+            // var authInfoBytes
             console.log("compressedPublicKey:", compressedPublicKey);
             console.log("elderAccSeq:", elderAccSeq);
             console.log("elderFee:", elderFee.amount);
             console.log("elderFee:", elderFee.gas);
-            try {
-                authInfoBytes = makeAuthInfoBytes(
-                    [{ pubkey, sequence: elderAccSeq }],
-                    elderFee.amount,
-                    elderFee.gas,
-                    undefined,
-                    undefined,
-                    SignMode.SIGN_MODE_DIRECT,
-                );
-            } catch (error) {
-                console.error("Error making Auth Info Bytes:", error);
-            }
+            // try {
+            //     authInfoBytes = makeAuthInfoBytes(
+            //         [{ pubkey, sequence: elderAccSeq }],
+            //         elderFee.amount,
+            //         elderFee.gas,
+            //         undefined,
+            //         undefined,
+            //         SignMode.SIGN_MODE_DIRECT,
+            //     );
+            // } catch (error) {
+            //     console.error("Error making Auth Info Bytes:", error);
+            // }
 
-            console.log("Auth Info Bytes:", authInfoBytes);
+            // console.log("Auth Info Bytes:", authInfoBytes);
 
-            const txBodyBytes = registry.encode({
-                typeUrl: customMessageTypeUrl,
-                value: MsgSubmitRollTx.encode(elderMsg.value),
-            })
-            // const txBodyBytes = MsgSubmitRollTx.encode(elderMsg)
+            const bodyBytes = TxBody.encode(
+                TxBody.fromPartial({
+                    messages: [
+                        {
+                            typeUrl: customMessageTypeUrl,
+                            value: MsgSubmitRollTx.encode(elderMsg.value).finish(),
+                        }
+                    ],
+                })
+            ).finish()
+            
 
             const chainId = "elder_122018";
-            let elderAccountNumber = 0 
-            
-            const signDoc = { typeUrl: customMessageTypeUrl, bodyBytes: txBodyBytes, authInfoBytes: authInfoBytes, chainId: chainId, accountNumber: elderAccountNumber};
+            let accountNumber = 0 
+            const authInfoBytes2 = AuthInfo.encode(
+                AuthInfo.fromPartial(
+                    {
+                        signerInfos: [
+                            {
+                                publicKey: pubk,
+                                sequence: elderAccSeq,
+                                modeInfo: {
+                                    single: {
+                                      mode: SignMode.SIGN_MODE_DIRECT,
+                                    },
+                                },
+                            },
+                        ],
+                        fee: Fee.fromPartial({
+                            amount: [{
+                                denom: "uelder",
+                                amount: "400000",
+                            }],
+                            gasLimit: 400000,
+                        }),
+                    },
+                )
+            ).finish()
+
+            const signDoc = makeSignDoc(bodyBytes, authInfoBytes2, chainId, accountNumber);
+            const signBytes = makeSignBytes(signDoc);
+
+            console.log("SignBytes - ", signBytes)
+
             const signingWallet = await ElderDirectSecp256k1Wallet.fromCompressedPublicKey(pubKeyBytes);
             const { signature } = await signingWallet.signDirect(elderAddress, signDoc);
 
             console.log("Sign Response:", signature);
+            console.log("Signs - ", Buffer.from(signature.signature, "base64"))
 
             const txRaw = TxRaw.fromPartial({
-                typeUrl: customMessageTypeUrl,
-                bodyBytes: txBodyBytes,
-                authInfoBytes: signDoc.authInfoBytes,
-                signatures: fromBase64(signature.signature),
+                bodyBytes: bodyBytes,
+                authInfoBytes: authInfoBytes2,
+                signatures: [fromBase64(signature.signature)],
             });
 
 
-            // const txRawBytes = Uint8Array.from(TxRaw.encode(txRaw).finish());
+            console.log("Anshal - aaa")
+            const txRawBytes = TxRaw.encode(txRaw).finish();
 
-            const txRawBytes = Uint8Array.from(txRaw);
+            // const txRawBytes = Uint8Array.from(txRaw);
             try {
                 console.log("Broadcasting Transaction...", txRawBytes);
                 const client = await SigningStargateClient.connectWithSigner(

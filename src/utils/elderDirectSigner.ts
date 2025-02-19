@@ -3,6 +3,8 @@ import { Secp256k1, sha256 } from "@cosmjs/crypto";
 import { toBech32 } from "@cosmjs/encoding";
 import { AccountData, DirectSignResponse, OfflineDirectSigner, makeSignDoc, makeSignBytes } from "@cosmjs/proto-signing"
 import { SignDoc } from "cosmjs-types/cosmos/tx/v1beta1/tx";
+import { ethers } from "ethers";
+import { PubKey } from "../app/pages/Home/components/Staking/elder_proto/crypto/ethsecp256k1/keys.ts";
 
 declare var window: any
 
@@ -66,7 +68,8 @@ export class ElderDirectSecp256k1Wallet implements OfflineDirectSigner {
         console.log("rawSecp256k1PubkeyToRawAddress(this.pubkey):", rawSecp256k1PubkeyToRawAddress(this.pubkey));
         console.log("prefix: ", this.prefix)
         console.log("toBech32(this.prefix, rawSecp256k1PubkeyToRawAddress(this.pubkey)):", toBech32(this.prefix, rawSecp256k1PubkeyToRawAddress(this.pubkey)));
-        return toBech32(this.prefix, rawSecp256k1PubkeyToRawAddress(this.pubkey));
+        // return toBech32(this.prefix, "1383221e7255514256841157De0753cAf2FDa573");
+        return "elder1zwpjy8nj24g5y45yz9taup6nete0mftn6q30qk"
     }
 
     public async getAccounts(): Promise<readonly AccountData[]> {
@@ -85,21 +88,26 @@ export class ElderDirectSecp256k1Wallet implements OfflineDirectSigner {
         if (address !== this.address) {
             throw new Error(`Address ${address} not found in wallet`);
         }
-        const hashedMessage = sha256(signBytes);
+        // const hashedMessage = sha256(signBytes);
         // const signature = await Secp256k1.createSignature(hashedMessage, this.privkey);
 
         const [account] = await window.ethereum.request({
             method: "eth_accounts",
         });
         // Sign with MetaMask
+                
         const signature = await window.ethereum.request({
             method: 'personal_sign',
-            params: [JSON.stringify(hashedMessage), account]
+            params: [Buffer.from(signBytes).toString("hex"), account]
         });
 
-        console.log("Signature:", signature);
+        //verify signatur
+
 
         const signatureBytes = convertSignatureTo64ByteUint8Array(signature);
+        // const pubkey = PubKey.encode(PubKey.fromPartial({
+        //     key: this.pubkey,
+        // })).finish()
         const stdSignature = encodeSecp256k1Signature(this.pubkey, signatureBytes);
         return {
             signed: signDoc,
@@ -107,3 +115,9 @@ export class ElderDirectSecp256k1Wallet implements OfflineDirectSigner {
         };
     }
 }
+
+// {"0":70,"1":51,"2":198,"3":22,"4":12,"5":224,"6":233,"7":115,"8":132,"9":188,"10":189,"11":19,"12":89,"13":193,"14":13,"15":41,"16":143,"17":227,"18":224,"19":115,"20":169,"21":212,"22":170,"23":100,"24":247,"25":199,"26":52,"27":149,"28":77,"29":226,"30":168,"31":161}
+// {"0":70,"1":51,"2":198,"3":22,"4":12,"5":224,"6":233,"7":115,"8":132,"9":188,"10":189,"11":19,"12":89,"13":193,"14":13,"15":41,"16":143,"17":227,"18":224,"19":115,"20":169,"21":212,"22":170,"23":100,"24":247,"25":199,"26":52,"27":149,"28":77,"29":226,"30":168,"31":161}
+// {"0":70,"1":51,"2":198,"3":22,"4":12,"5":224,"6":233,"7":115,"8":132,"9":188,"10":189,"11":19,"12":89,"13":193,"14":13,"15":41,"16":143,"17":227,"18":224,"19":115,"20":169,"21":212,"22":170,"23":100,"24":247,"25":199,"26":52,"27":149,"28":77,"29":226,"30":168,"31":161}
+// {"0":70,"1":51,"2":198,"3":22,"4":12,"5":224,"6":233,"7":115,"8":132,"9":188,"10":189,"11":19,"12":89,"13":193,"14":13,"15":41,"16":143,"17":227,"18":224,"19":115,"20":169,"21":212,"22":170,"23":100,"24":247,"25":199,"26":52,"27":149,"28":77,"29":226,"30":168,"31":161}
+// {"0":66,"1":233,"2":119,"3":47,"4":202,"5":118,"6":9,"7":218,"8":21,"9":79,"10":224,"11":220,"12":85,"13":0,"14":154,"15":237,"16":141,"17":201,"18":191,"19":105,"20":169,"21":133,"22":135,"23":82,"24":90,"25":111,"26":8,"27":57,"28":240,"29":86,"30":192,"31":10}
