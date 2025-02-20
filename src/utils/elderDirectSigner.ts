@@ -5,6 +5,7 @@ import { AccountData, DirectSignResponse, OfflineDirectSigner, makeSignDoc, make
 import { SignDoc } from "cosmjs-types/cosmos/tx/v1beta1/tx";
 import { ethers } from "ethers";
 import { PubKey } from "../app/pages/Home/components/Staking/elder_proto/crypto/ethsecp256k1/keys.ts";
+import { Buffer } from "buffer";
 
 declare var window: any
 
@@ -102,7 +103,7 @@ export class ElderDirectSecp256k1Wallet implements OfflineDirectSigner {
         });
 
         //verify signatur
-
+        
 
         const signatureBytes = convertSignatureTo64ByteUint8Array(signature);
         // const pubkey = PubKey.encode(PubKey.fromPartial({

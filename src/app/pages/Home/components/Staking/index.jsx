@@ -160,7 +160,7 @@ const Staking = ({ account, elderAddress, elderClient, elderAccountNumber }) => 
 
             // pubkey =PubKey.encode()
 
-            let elderAccSeq = 8
+            let elderAccSeq = 10
 
             console.log("Pubkey:", pubkey);
 
