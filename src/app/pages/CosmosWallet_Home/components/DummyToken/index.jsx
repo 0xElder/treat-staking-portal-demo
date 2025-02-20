@@ -4,7 +4,7 @@ import {
     DUMMY_TOKEN,
     DUMMY_TOKEN_ADDRESS,
     provider,
-} from "../../../../../web3";
+} from "../../rpc_eth_web3";
 import { sendElderCustomTransaction, getElderMsgAndFee } from "elderjs";
 import { ELDER_CHAIN_CONFIG } from "../../../../../../constants";
 // import { MdOutlineToken } from "react-icons/md";
@@ -49,9 +49,7 @@ const DummyToken = ({
     const [claimed, setClaimed] = useState(false);
 
     const claim = async () => {
-        const signer = provider.getSigner();
-        const dummyToken = DUMMY_TOKEN.connect(signer);
-        const tx = await dummyToken.claim.populateTransaction();
+        const tx = await DUMMY_TOKEN.claim.populateTransaction();
 
         let { elderMsg, elderFee, tx_hash } = getElderMsgAndFee(tx, elderAddress, 1000000, ethers.parseEther("0"), ELDER_CHAIN_CONFIG.rollChainID, ELDER_CHAIN_CONFIG.rollID, elderAccountNumber, elderPubkicKey, elderAccountSequence);
         let {success, data } = await sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);

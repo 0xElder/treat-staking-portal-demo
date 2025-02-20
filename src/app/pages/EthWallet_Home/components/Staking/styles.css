@@ -1,0 +1,28 @@
+.claimReward .btn {
+    width: 335px;
+}
+.stakingCardsContainer {
+    padding: 0px 10px 0px 0px;
+}
+.stakingCards {
+    border: 0.5px solid rgba(255, 255, 255, 0.3);
+    padding: 7px 10px;
+    border-radius: 15px;
+    min-width: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: 0px 5px;
+    box-shadow: 
+    0 4px 10px rgba(0, 0, 0, 0.6),
+    inset 0 1px 3px rgba(255, 255, 255, 0.2);
+}
+.stakingCardsValue {
+    font-size: 18px;
+    font-weight: 600;
+}
+.stakingCardsLabel {
+    font-size: 14px;
+    margin-top: 5px;
+}

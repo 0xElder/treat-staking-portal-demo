@@ -3,7 +3,7 @@ import Staking from "./components/Staking";
 import DummyToken from "./components/DummyToken";
 import { Balance } from "./components/Balance";
 import { TreatPortal } from "./components/TreatPortal";
-import { provider } from "../../../web3";
+import { provider } from "./rpc_eth_web3";
 import AccountInfo from "./components/AccountInfo";
 import { ToastContainer } from 'react-toastify';
 // import ToggleBtn from "../../components/ToggleBtn";

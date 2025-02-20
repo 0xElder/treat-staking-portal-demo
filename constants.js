@@ -12,4 +12,6 @@ export const ELDER_CHAIN_CONFIG = {
     rest: "http://localhost:1317",
     rollID: 2,
     rollChainID: 1512,
+
+    eth_rpc : "http://localhost:8545",
 };

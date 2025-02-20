@@ -1,0 +1,11 @@
+.balanceContainer {
+    border: 0.5px solid #373a40;
+    background-color: #171f2f;
+    border-radius: 8px;
+    padding: 10px;
+    flex: 1;
+}
+.balanceText {
+    font-size: 16px;
+    font-weight: 500;
+}

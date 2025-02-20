@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { ethers } from "ethers";
 import React, { useEffect, useState } from "react";
-import { DUMMY_TOKEN, provider, STAKING_CONTRACT } from "../../../../../web3";
+import { DUMMY_TOKEN, provider, STAKING_CONTRACT } from "../../wallet_eth_web3";
 import { sendElderCustomTransaction, getElderMsgAndFee } from "elderjs";
 import { formatNumber } from "../../../../../utils/helper";
 import { ELDER_CHAIN_CONFIG } from "../../../../../../constants";
