@@ -5,6 +5,7 @@ import { Balance } from "./components/Balance";
 import { TreatPortal } from "./components/TreatPortal";
 import { provider } from "../../../web3";
 import AccountInfo from "./components/AccountInfo";
+import { ToastContainer } from 'react-toastify';
 // import ToggleBtn from "../../components/ToggleBtn";
 import "./styles.css";
 
@@ -13,6 +14,8 @@ const Home = () => {
     const [elderAddress, setElderAddress] = useState(null);
     var [elderClient, setElderClient] = useState(null);
     const [elderAccountNumber, setElderAccountNumber] = useState(null);
+    var [elderAccountSequence, setElderAccountSequence] = useState(null);
+    const [elderPubkicKey, setElderPublicKey] = useState(null);
 
     return (
         <div className="homeContainer">
@@ -28,6 +31,8 @@ const Home = () => {
                     setElderAddress={setElderAddress}
                     setElderClient={setElderClient}
                     setElderAccountNumber={setElderAccountNumber}
+                    setElderAccountSequence={setElderAccountSequence}
+                    setElderPublicKey={setElderPublicKey}
                 />
             </div>
             {provider && account && (
@@ -38,16 +43,23 @@ const Home = () => {
                             elderAddress={elderAddress}
                             elderClient={elderClient}
                             elderAccountNumber={elderAccountNumber}
+                            elderAccountSequence={elderAccountSequence}
+                            elderPubkicKey={elderPubkicKey}
+                            setElderAccountSequence={setElderAccountSequence}
                         />
                         <DummyToken
                             account={account}
                             elderAddress={elderAddress}
                             elderClient={elderClient}
                             elderAccountNumber={elderAccountNumber}
+                            elderAccountSequence={elderAccountSequence}
+                            elderPubkicKey={elderPubkicKey}
+                            setElderAccountSequence={setElderAccountSequence}
                         />
                     </div>
                 </>
             )}
+            <ToastContainer />
             {/* <ToggleBtn text="Enable" /> */}
         </div>
     );

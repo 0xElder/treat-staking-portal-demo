@@ -11,8 +11,11 @@ export const Balance = ({ account }) => {
     useEffect(() => {
         const getBalance = async () => {
             const balance = await provider.getBalance(account);
-            return ethers.utils.formatEther(balance);
+            return ethers.formatEther(balance);
         };
+        if (!account) {
+            return;
+        }
         getBalance().then(setBalance).catch(console.error);
     }, [account, provider]);
 

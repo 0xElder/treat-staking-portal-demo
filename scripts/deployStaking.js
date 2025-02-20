@@ -16,7 +16,7 @@ async function main() {
   const constructorArguments = [
     tokenAddress,
     deployer.address,
-    hre.ethers.utils.parseEther(rewardRate),
+    hre.ethers.parseEther(rewardRate),
   ];
 
   const StakingVault = await hre.ethers.getContractFactory("StakingVault");
@@ -33,7 +33,7 @@ async function main() {
 
   const tx = await dummyTokenContract.approve(
     stakingVault.address,
-    hre.ethers.utils.parseEther("1000000000")
+    hre.ethers.parseEther("1000000000")
   );
   const receipt = await tx.wait();
   console.log(
