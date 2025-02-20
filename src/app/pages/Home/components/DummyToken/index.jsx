@@ -10,6 +10,7 @@ import { ELDER_CHAIN_CONFIG } from "../../../../../../constants";
 // import { MdOutlineToken } from "react-icons/md";
 import "./styles.css";
 import shibLogo from "./shiba-inu-shib-logo.png";
+import { toast } from 'react-toastify';
 
 const getBalanceAndClaimed = async account => {
     const dummyToken = DUMMY_TOKEN.connect(provider);
@@ -53,9 +54,14 @@ const DummyToken = ({
         const tx = await dummyToken.claim.populateTransaction();
 
         let { elderMsg, elderFee, tx_hash } = getElderMsgAndFee(tx, elderAddress, 1000000, ethers.parseEther("0"), ELDER_CHAIN_CONFIG.rollChainID, ELDER_CHAIN_CONFIG.rollID, elderAccountNumber, elderPubkicKey, elderAccountSequence);
-        await sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
-        setElderAccountSequence(elderAccountSequence + 1);
+        let {success, data } = await sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
 
+        if (!success) {
+            toast.error(`Claim Treat Transaction failed: ${data}`);
+            return;
+        }
+        
+        setElderAccountSequence(elderAccountSequence + 1);
         toast.success(`Claim Treat Transaction Hash: ${tx_hash}`);
 
         // const receipt = await tx.wait();

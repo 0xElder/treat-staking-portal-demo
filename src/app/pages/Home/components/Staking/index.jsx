@@ -50,8 +50,13 @@ const Staking = ({ account, elderAddress, elderClient, elderAccountNumber, elder
 
             // getElderMsgAndFee(tx, elderAddress, rollappGasLimit, rollapValueTransfer, rollappChainID)
             let { elderMsg, elderFee, tx_hash } = getElderMsgAndFee(tx, elderAddress, 1000000, ethers.parseEther("0"), ELDER_CHAIN_CONFIG.rollChainID, ELDER_CHAIN_CONFIG.rollID, elderAccountNumber, elderPubkicKey, seq);
-            await sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
-            console.log("tx_hash", tx_hash, "accountSequence", seq);
+            let {success, data } = await sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
+
+            if (!success) {
+                toast.error(`Approval Transaction failed: ${data}`);
+                return;
+            }
+
             seq++;
 
             toast.success(`Approval Transaction Hash: ${tx_hash}`);
@@ -62,10 +67,15 @@ const Staking = ({ account, elderAddress, elderClient, elderAccountNumber, elder
         const tx = await staking.stake.populateTransaction(amount);
 
         let { elderMsg, elderFee, tx_hash } = getElderMsgAndFee(tx, elderAddress, 1000000, ethers.parseEther("0"), ELDER_CHAIN_CONFIG.rollChainID, ELDER_CHAIN_CONFIG.rollID, elderAccountNumber, elderPubkicKey, seq);
-        await sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
-        console.log("tx_hash", tx_hash, "accountSequence", seq);
-        setElderAccountSequence(elderAccountSequence + 2);
+        let {success, data } = await sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
 
+        if (!success) {
+            toast.error(`Staking Transaction failed: ${data}`);
+            setElderAccountSequence(elderAccountSequence + 1);
+            return;
+        }
+        
+        setElderAccountSequence(elderAccountSequence + 2);
         toast.success(`Staking Transaction Hash: ${tx_hash}`);
     };
 
@@ -78,10 +88,14 @@ const Staking = ({ account, elderAddress, elderClient, elderAccountNumber, elder
         const tx = await staking.withdraw.populateTransaction(amount);
 
         let { elderMsg, elderFee, tx_hash } = getElderMsgAndFee(tx, elderAddress, 1000000, ethers.parseEther("0"), ELDER_CHAIN_CONFIG.rollChainID, ELDER_CHAIN_CONFIG.rollID, elderAccountNumber, elderPubkicKey, elderAccountSequence);
-        await sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
-        console.log("tx_hash", tx_hash, "accountSequence", elderAccountSequence);
-        setElderAccountSequence(elderAccountSequence + 1);
+        let {success, data } = await sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
 
+        if (!success) {
+            toast.error(`Withdraw Transaction failed: ${data}`);
+            return;
+        }
+
+        setElderAccountSequence(elderAccountSequence + 1);
         toast.success(`Withdraw Transaction Hash: ${tx_hash}`);
     };
 
@@ -92,10 +106,14 @@ const Staking = ({ account, elderAddress, elderClient, elderAccountNumber, elder
         const tx = await staking.claimReward.populateTransaction();
 
         let { elderMsg, elderFee, tx_hash } = getElderMsgAndFee(tx, elderAddress, 1000000, ethers.parseEther("0"), ELDER_CHAIN_CONFIG.rollChainID, ELDER_CHAIN_CONFIG.rollID, elderAccountNumber, elderPubkicKey, elderAccountSequence);
-        await sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
-        console.log("tx_hash", tx_hash, "accountSequence", elderAccountSequence);
-        setElderAccountSequence(elderAccountSequence + 1);
+        let {success, data } = await sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
 
+        if (!success) {
+            toast.error(`Claim Reward Transaction failed: ${data}`);
+            return;
+        }
+
+        setElderAccountSequence(elderAccountSequence + 1);
         toast.success(`Claim Reward Transaction Hash: ${tx_hash}`);
     };
 
