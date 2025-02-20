@@ -1,7 +1,7 @@
 {
     "name": "treat-staking-portal-demo",
     "description": "Demo app with React and Elderjs",
-    "version": "0.0.2",
+    "version": "v0.1.2",
     "author": {
         "name": ""
     },
