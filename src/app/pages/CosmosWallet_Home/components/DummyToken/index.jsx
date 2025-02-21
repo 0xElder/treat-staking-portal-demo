@@ -1,13 +1,8 @@
 import { ethers } from "ethers";
 import React, { useEffect, useState } from "react";
-import {
-    DUMMY_TOKEN,
-    DUMMY_TOKEN_ADDRESS,
-    provider,
-} from "../../rpc_eth_web3";
-import { sendElderCustomTransaction, getElderMsgAndFee } from "elderjs";
+import {DUMMY_TOKEN, DUMMY_TOKEN_ADDRESS, provider} from "../../rpc_eth_web3";
+import { cosmos_sendElderCustomTransaction, cosmos_getElderMsgAndFee } from "elderjs";
 import { ELDER_CHAIN_CONFIG } from "../../../../../../constants";
-// import { MdOutlineToken } from "react-icons/md";
 import "./styles.css";
 import shibLogo from "./shiba-inu-shib-logo.png";
 import { toast } from 'react-toastify';
@@ -43,7 +38,7 @@ const addDummyTokenToMetaMask = async () => {
 };
 
 const DummyToken = ({
-    account, elderAddress, elderClient, elderAccountNumber, elderAccountSequence, elderPubkicKey, setElderAccountSequence
+    account, elderAddress, elderClient, elderAccountNumber, elderAccountSequence, elderPublicKey, setElderAccountSequence
 }) => {
     const [balance, setBalance] = useState("");
     const [claimed, setClaimed] = useState(false);
@@ -51,8 +46,8 @@ const DummyToken = ({
     const claim = async () => {
         const tx = await DUMMY_TOKEN.claim.populateTransaction();
 
-        let { elderMsg, elderFee, tx_hash } = getElderMsgAndFee(tx, elderAddress, 1000000, ethers.parseEther("0"), ELDER_CHAIN_CONFIG.rollChainID, ELDER_CHAIN_CONFIG.rollID, elderAccountNumber, elderPubkicKey, elderAccountSequence);
-        let {success, data } = await sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
+        let { elderMsg, elderFee, tx_hash } = cosmos_getElderMsgAndFee(tx, elderAddress, 1000000, ethers.parseEther("0"), ELDER_CHAIN_CONFIG.rollChainID, ELDER_CHAIN_CONFIG.rollID, elderAccountNumber, elderPublicKey, elderAccountSequence);
+        let {success, data } = await cosmos_sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
 
         if (!success) {
             toast.error(`Claim Treat Transaction failed: ${data}`);

@@ -15,7 +15,7 @@ const Home = () => {
     var [elderClient, setElderClient] = useState(null);
     const [elderAccountNumber, setElderAccountNumber] = useState(null);
     var [elderAccountSequence, setElderAccountSequence] = useState(null);
-    const [elderPubkicKey, setElderPublicKey] = useState(null);
+    const [elderPublicKey, setElderPublicKey] = useState(null);
 
     return (
         <div className="homeContainer">
@@ -44,7 +44,7 @@ const Home = () => {
                             elderClient={elderClient}
                             elderAccountNumber={elderAccountNumber}
                             elderAccountSequence={elderAccountSequence}
-                            elderPubkicKey={elderPubkicKey}
+                            elderPublicKey={elderPublicKey}
                             setElderAccountSequence={setElderAccountSequence}
                         />
                         <DummyToken
@@ -53,7 +53,7 @@ const Home = () => {
                             elderClient={elderClient}
                             elderAccountNumber={elderAccountNumber}
                             elderAccountSequence={elderAccountSequence}
-                            elderPubkicKey={elderPubkicKey}
+                            elderPublicKey={elderPublicKey}
                             setElderAccountSequence={setElderAccountSequence}
                         />
                     </div>

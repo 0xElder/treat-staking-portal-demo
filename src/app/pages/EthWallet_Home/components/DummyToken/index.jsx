@@ -5,8 +5,8 @@ import {
     DUMMY_TOKEN_ADDRESS,
     provider,
 } from "../../wallet_eth_web3";
-import { sendElderCustomTransaction, getElderMsgAndFee } from "elderjs";
-import { ELDER_CHAIN_CONFIG } from "../../../../../../constants";
+// import { eth_sendElderCustomTransaction, eth_getElderMsgAndFee } from "elderjs/";
+// import { ELDER_CHAIN_CONFIG } from "../../../../../../constants";
 // import { MdOutlineToken } from "react-icons/md";
 import "./styles.css";
 import shibLogo from "./shiba-inu-shib-logo.png";
@@ -43,7 +43,7 @@ const addDummyTokenToMetaMask = async () => {
 };
 
 const DummyToken = ({
-    account, elderAddress, elderClient, elderAccountNumber, elderAccountSequence, elderPubkicKey, setElderAccountSequence
+    account, elderAddress, elderAccountNumber, elderAccountSequence, elderPublicKey, setElderAccountSequence
 }) => {
     const [balance, setBalance] = useState("");
     const [claimed, setClaimed] = useState(false);
@@ -53,8 +53,8 @@ const DummyToken = ({
         const dummyToken = DUMMY_TOKEN.connect(signer);
         const tx = await dummyToken.claim.populateTransaction();
 
-        let { elderMsg, elderFee, tx_hash } = getElderMsgAndFee(tx, elderAddress, 1000000, ethers.parseEther("0"), ELDER_CHAIN_CONFIG.rollChainID, ELDER_CHAIN_CONFIG.rollID, elderAccountNumber, elderPubkicKey, elderAccountSequence);
-        let {success, data } = await sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
+        // let { elderMsg, elderFee, tx_hash } = eth_getElderMsgAndFee(tx, elderAddress, 1000000, ethers.parseEther("0"), ELDER_CHAIN_CONFIG.rollChainID, ELDER_CHAIN_CONFIG.rollID, elderAccountNumber, elderPublicKey, elderAccountSequence);
+        // let {success, data } = await eth_sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
 
         if (!success) {
             toast.error(`Claim Treat Transaction failed: ${data}`);

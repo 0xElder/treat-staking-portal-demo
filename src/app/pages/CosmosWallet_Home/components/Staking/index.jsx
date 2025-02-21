@@ -2,7 +2,7 @@
 import { ethers } from "ethers";
 import React, { useEffect, useState } from "react";
 import { DUMMY_TOKEN, provider, STAKING_CONTRACT } from "../../rpc_eth_web3";
-import { sendElderCustomTransaction, getElderMsgAndFee } from "elderjs";
+import { cosmos_sendElderCustomTransaction, cosmos_getElderMsgAndFee } from "elderjs";
 import { formatNumber } from "../../../../../utils/helper";
 import { ELDER_CHAIN_CONFIG } from "../../../../../../constants";
 import { toast } from 'react-toastify';
@@ -22,7 +22,7 @@ const getStakingViews = async account => {
     };
 };
 
-const Staking = ({ account, elderAddress, elderClient, elderAccountNumber, elderAccountSequence, elderPubkicKey, setElderAccountSequence }) => {
+const Staking = ({ account, elderAddress, elderClient, elderAccountNumber, elderAccountSequence, elderPublicKey, setElderAccountSequence }) => {
     const [views, setViews] = useState({});
     const [stake, setStake] = useState("");
     const [withdraw, setWithdraw] = useState("");
@@ -46,9 +46,9 @@ const Staking = ({ account, elderAddress, elderClient, elderAccountNumber, elder
         if (allowance<amount) {
             const tx = await DUMMY_TOKEN.approve.populateTransaction(STAKING_CONTRACT.target, amount);
 
-            // getElderMsgAndFee(tx, elderAddress, rollappGasLimit, rollapValueTransfer, rollappChainID)
-            let { elderMsg, elderFee, tx_hash } = getElderMsgAndFee(tx, elderAddress, 1000000, ethers.parseEther("0"), ELDER_CHAIN_CONFIG.rollChainID, ELDER_CHAIN_CONFIG.rollID, elderAccountNumber, elderPubkicKey, seq);
-            let {success, data } = await sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
+            // cosmos_getElderMsgAndFee(tx, elderAddress, rollappGasLimit, rollapValueTransfer, rollappChainID)
+            let { elderMsg, elderFee, tx_hash } = cosmos_getElderMsgAndFee(tx, elderAddress, 1000000, ethers.parseEther("0"), ELDER_CHAIN_CONFIG.rollChainID, ELDER_CHAIN_CONFIG.rollID, elderAccountNumber, elderPublicKey, seq);
+            let {success, data } = await cosmos_sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
 
             if (!success) {
                 toast.error(`Approval Transaction failed: ${data}`);
@@ -62,8 +62,8 @@ const Staking = ({ account, elderAddress, elderClient, elderAccountNumber, elder
 
         const tx = await STAKING_CONTRACT.stake.populateTransaction(amount);
 
-        let { elderMsg, elderFee, tx_hash } = getElderMsgAndFee(tx, elderAddress, 1000000, ethers.parseEther("0"), ELDER_CHAIN_CONFIG.rollChainID, ELDER_CHAIN_CONFIG.rollID, elderAccountNumber, elderPubkicKey, seq);
-        let {success, data } = await sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
+        let { elderMsg, elderFee, tx_hash } = cosmos_getElderMsgAndFee(tx, elderAddress, 1000000, ethers.parseEther("0"), ELDER_CHAIN_CONFIG.rollChainID, ELDER_CHAIN_CONFIG.rollID, elderAccountNumber, elderPublicKey, seq);
+        let {success, data } = await cosmos_sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
 
         if (!success) {
             toast.error(`Staking Transaction failed: ${data}`);
@@ -81,8 +81,8 @@ const Staking = ({ account, elderAddress, elderClient, elderAccountNumber, elder
         const amount = ethers.parseEther(withdraw);
         const tx = await STAKING_CONTRACT.withdraw.populateTransaction(amount);
 
-        let { elderMsg, elderFee, tx_hash } = getElderMsgAndFee(tx, elderAddress, 1000000, ethers.parseEther("0"), ELDER_CHAIN_CONFIG.rollChainID, ELDER_CHAIN_CONFIG.rollID, elderAccountNumber, elderPubkicKey, elderAccountSequence);
-        let {success, data } = await sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
+        let { elderMsg, elderFee, tx_hash } = cosmos_getElderMsgAndFee(tx, elderAddress, 1000000, ethers.parseEther("0"), ELDER_CHAIN_CONFIG.rollChainID, ELDER_CHAIN_CONFIG.rollID, elderAccountNumber, elderPublicKey, elderAccountSequence);
+        let {success, data } = await cosmos_sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
 
         if (!success) {
             toast.error(`Withdraw Transaction failed: ${data}`);
@@ -96,8 +96,8 @@ const Staking = ({ account, elderAddress, elderClient, elderAccountNumber, elder
     const handleClaimReward = async () => {
         const tx = await STAKING_CONTRACT.claimReward.populateTransaction();
 
-        let { elderMsg, elderFee, tx_hash } = getElderMsgAndFee(tx, elderAddress, 1000000, ethers.parseEther("0"), ELDER_CHAIN_CONFIG.rollChainID, ELDER_CHAIN_CONFIG.rollID, elderAccountNumber, elderPubkicKey, elderAccountSequence);
-        let {success, data } = await sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
+        let { elderMsg, elderFee, tx_hash } = cosmos_getElderMsgAndFee(tx, elderAddress, 1000000, ethers.parseEther("0"), ELDER_CHAIN_CONFIG.rollChainID, ELDER_CHAIN_CONFIG.rollID, elderAccountNumber, elderPublicKey, elderAccountSequence);
+        let {success, data } = await cosmos_sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
 
         if (!success) {
             toast.error(`Claim Reward Transaction failed: ${data}`);

@@ -12,10 +12,9 @@ import "./styles.css";
 const Home = () => {
     const [account, setAccount] = useState(null);
     const [elderAddress, setElderAddress] = useState(null);
-    var [elderClient, setElderClient] = useState(null);
     const [elderAccountNumber, setElderAccountNumber] = useState(null);
     var [elderAccountSequence, setElderAccountSequence] = useState(null);
-    const [elderPubkicKey, setElderPublicKey] = useState(null);
+    const [elderPublicKey, setElderPublicKey] = useState(null);
 
     return (
         <div className="homeContainer">
@@ -29,7 +28,6 @@ const Home = () => {
                     setAccount={setAccount}
                     elderAddress={elderAddress}
                     setElderAddress={setElderAddress}
-                    setElderClient={setElderClient}
                     setElderAccountNumber={setElderAccountNumber}
                     setElderAccountSequence={setElderAccountSequence}
                     setElderPublicKey={setElderPublicKey}
@@ -41,19 +39,17 @@ const Home = () => {
                         <Staking
                             account={account}
                             elderAddress={elderAddress}
-                            elderClient={elderClient}
                             elderAccountNumber={elderAccountNumber}
                             elderAccountSequence={elderAccountSequence}
-                            elderPubkicKey={elderPubkicKey}
+                            elderPublicKey={elderPublicKey}
                             setElderAccountSequence={setElderAccountSequence}
                         />
                         <DummyToken
                             account={account}
                             elderAddress={elderAddress}
-                            elderClient={elderClient}
                             elderAccountNumber={elderAccountNumber}
                             elderAccountSequence={elderAccountSequence}
-                            elderPubkicKey={elderPubkicKey}
+                            elderPublicKey={elderPublicKey}
                             setElderAccountSequence={setElderAccountSequence}
                         />
                     </div>

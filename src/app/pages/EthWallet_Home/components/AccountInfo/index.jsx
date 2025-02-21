@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
-import { getElderClient } from "elderjs";
-import { ELDER_CHAIN_CONFIG } from "../../../../../../constants";
+import { provider } from "../../wallet_eth_web3";
+import { eth_getAccountNumberAndSequence, eth_getElderAccountInfoFromSignature } from "elderjs";
 import { getMaskedValue } from "../../../../../utils/helper";
 import CopyToClipboard from "../../../../components/CopyToClipboard";
 import { MdAccountBox, MdFingerprint } from "react-icons/md";
+import { ELDER_CHAIN_CONFIG } from "../../../../../../constants";
 import "./styles.css";
 
 const AccountInfo = ({
@@ -11,37 +12,58 @@ const AccountInfo = ({
     setAccount,
     elderAddress,
     setElderAddress,
-    setElderClient,
     setElderAccountNumber,
     setElderAccountSequence,
     setElderPublicKey,
 }) => {
     useEffect(() => {
-        checkAccounts().then(setAccount).catch(console.error);
+        async function fetchData() {
+            if (!window.ethereum) {
+                return null;
+            }
 
-        if (window.keplr) {
-            (async () => {
-                const { elderAddress, elderClient, elderAccountNumber, elderAccountSequence, elderPublicKey } =
-                    await getElderClient(ELDER_CHAIN_CONFIG);
-                setElderAddress(elderAddress);
-                setElderClient(elderClient);
-                setElderAccountNumber(elderAccountNumber);
-                setElderAccountSequence(elderAccountSequence);
-                setElderPublicKey(elderPublicKey);
-            })();
+            var ethAddr;
+
+            try {
+                ethAddr = await checkAccounts()
+                setAccount(ethAddr)
+            } catch (error) {
+                console.log(error)
+            }
         }
+        fetchData();
     }, []);
+
+    const getElderAccountInfo = async () => {
+        let message = "Sign to Login";
+
+        const signer = await provider.getSigner();
+
+        const signature = await signer.signMessage(message);
+
+        var { recoveredPublicKey, elderAddr } = await eth_getElderAccountInfoFromSignature(message, signature)
+
+        const { elderAccountNumber, elderAccountSequence } = await eth_getAccountNumberAndSequence(ELDER_CHAIN_CONFIG.rpc, elderAddr);
+
+        setElderAddress(elderAddr);
+        setElderPublicKey(recoveredPublicKey);
+        setElderAccountNumber(elderAccountNumber);
+        setElderAccountSequence(elderAccountSequence);
+    };
 
     const checkAccounts = async () => {
         if (!window.ethereum) {
             return null;
         }
+
         const [account] = await window.ethereum.request({
-            method: "eth_accounts",
+            method: "eth_requestAccounts",
         });
+
         window.ethereum.on("accountsChanged", accounts => {
             setAccount(accounts[0]);
         });
+
         return account;
     };
 
@@ -88,7 +110,7 @@ const AccountInfo = ({
                     </div>
                 ) : (
                     renderButton("Request Elder Account", () =>
-                        getElderClient(ELDER_CHAIN_CONFIG)
+                        getElderAccountInfo()
                     )
                 )}
             </div>
