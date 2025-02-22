@@ -2,12 +2,12 @@
 // versions:
 //   protoc-gen-ts_proto  v2.3.0
 //   protoc               unknown
-// source: elder/crypto/ethsecp256k1/keys.proto
+// source: elder/crypto/eldersecp256k1/keys.proto
 
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
-export const protobufPackage = "elder.crypto.ethsecp256k1";
+export const protobufPackage = "elder.crypto.eldersecp256k1";
 
 /**
  * PubKey defines a type alias for an ecdsa.PublicKey that implements

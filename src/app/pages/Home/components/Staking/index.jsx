@@ -7,7 +7,7 @@ import { formatNumber } from "../../../../../utils/helper";
 import { ELDER_CHAIN_CONFIG } from "../../../../../../constants";
 import { Registry } from "@cosmjs/proto-signing";
 import { MsgSubmitRollTx } from "./elder_proto/router/tx.ts";
-import { PubKey } from "./elder_proto/crypto/ethsecp256k1/keys.ts";
+import { PubKey } from "./elder_proto/crypto/eldersecp256k1/keys.ts";
 import { ElderDirectSecp256k1Wallet } from "../../../../../utils/ElderDirectSigner.ts";
 // import { makeAuthInfoBytes} from "@cosmjs/proto-signing"
 import { SigningStargateClient } from "@cosmjs/stargate";
@@ -22,7 +22,7 @@ import { SignMode } from "cosmjs-types/cosmos/tx/signing/v1beta1/signing";
 import './styles.css';
 
 const customMessageTypeUrl = "/elder.router.MsgSubmitRollTx";
-const customelderpubsecp = "/elder.crypto.ethsecp256k1.PubKey";
+const customelderpubsecp = "/elder.crypto.eldersecp256k1.PubKey";
 
 
 function hexToUint8Array(hexString) {
@@ -160,7 +160,7 @@ const Staking = ({ account, elderAddress, elderClient, elderAccountNumber }) => 
 
             // pubkey =PubKey.encode()
 
-            let elderAccSeq = 10
+            let elderAccSeq = 9
 
             console.log("Pubkey:", pubkey);
 

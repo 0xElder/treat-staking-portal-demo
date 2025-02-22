@@ -4,7 +4,7 @@ import { toBech32 } from "@cosmjs/encoding";
 import { AccountData, DirectSignResponse, OfflineDirectSigner, makeSignDoc, makeSignBytes } from "@cosmjs/proto-signing"
 import { SignDoc } from "cosmjs-types/cosmos/tx/v1beta1/tx";
 import { ethers } from "ethers";
-import { PubKey } from "../app/pages/Home/components/Staking/elder_proto/crypto/ethsecp256k1/keys.ts";
+import { PubKey } from "../app/pages/Home/components/Staking/elder_proto/crypto/eldersecp256k1/keys.ts";
 import { Buffer } from "buffer";
 
 declare var window: any
