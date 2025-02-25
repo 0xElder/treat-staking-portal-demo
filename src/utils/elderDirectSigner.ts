@@ -6,6 +6,9 @@ import { SignDoc } from "cosmjs-types/cosmos/tx/v1beta1/tx";
 import { ethers } from "ethers";
 import { PubKey } from "../app/pages/Home/components/Staking/elder_proto/crypto/eldersecp256k1/keys.ts";
 import { Buffer } from "buffer";
+import { bytesToHex } from "../app/pages/Home/components/Staking/index";
+// import { bytesToHex } from "@okxweb3/crypto-lib/dist/signutil/schnorr/index";
+// import { bytesToHex } from "@okxweb3/crypto-lib/dist/signutil/schnorr/index";
 
 declare var window: any
 
@@ -99,7 +102,7 @@ export class ElderDirectSecp256k1Wallet implements OfflineDirectSigner {
                 
         const signature = await window.ethereum.request({
             method: 'personal_sign',
-            params: [Buffer.from(signBytes).toString("hex"), account]
+            params: [bytesToHex(signBytes), account]
         });
 
         //verify signatur

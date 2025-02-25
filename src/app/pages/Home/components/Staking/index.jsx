@@ -5,7 +5,7 @@ import { DUMMY_TOKEN, provider, STAKING_CONTRACT } from "../../../../../web3";
 import { sendElderCustomTransaction, getElderMsgAndFee } from "elderjs";
 import { formatNumber } from "../../../../../utils/helper";
 import { ELDER_CHAIN_CONFIG } from "../../../../../../constants";
-import { Registry } from "@cosmjs/proto-signing";
+import { makeAuthInfoBytes, Registry } from "@cosmjs/proto-signing";
 import { MsgSubmitRollTx } from "./elder_proto/router/tx.ts";
 import { PubKey } from "./elder_proto/crypto/eldersecp256k1/keys.ts";
 import { ElderDirectSecp256k1Wallet } from "../../../../../utils/ElderDirectSigner.ts";
@@ -14,6 +14,7 @@ import { SigningStargateClient } from "@cosmjs/stargate";
 import { AuthInfo, TxRaw, TxBody, Fee} from "cosmjs-types/cosmos/tx/v1beta1/tx";
 import { Buffer } from "buffer";
 import { makeSignDoc, makeSignBytes } from "@cosmjs/proto-signing"
+import { coins } from "@cosmjs/stargate";
 
 
 // import { encodeSecp256k1Signature } from "@cosmjs/amino";
@@ -160,7 +161,7 @@ const Staking = ({ account, elderAddress, elderClient, elderAccountNumber }) => 
 
             // pubkey =PubKey.encode()
 
-            let elderAccSeq = 9
+            let elderAccSeq = 8
 
             console.log("Pubkey:", pubkey);
 
@@ -184,44 +185,31 @@ const Staking = ({ account, elderAddress, elderClient, elderAccountNumber }) => 
 
             // console.log("Auth Info Bytes:", authInfoBytes);
 
-            const bodyBytes = TxBody.encode(
-                TxBody.fromPartial({
-                    messages: [
-                        {
-                            typeUrl: customMessageTypeUrl,
-                            value: MsgSubmitRollTx.encode(elderMsg.value).finish(),
-                        }
-                    ],
-                })
-            ).finish()
+            // const bodyBytes = TxBody.encode(
+            //     TxBody.fromPartial({
+            //         messages: [
+            //             {
+            //                 typeUrl: customMessageTypeUrl,
+            //                 value: MsgSubmitRollTx.encode(elderMsg.value).finish(),
+            //             }
+            //         ],
+            //     })
+            // ).finish()
+
+            const bodyBytes = createTxBodyBytes(elderMsg)
+
             
 
             const chainId = "elder_122018";
             let accountNumber = 0 
-            const authInfoBytes2 = AuthInfo.encode(
-                AuthInfo.fromPartial(
-                    {
-                        signerInfos: [
-                            {
-                                publicKey: pubk,
-                                sequence: elderAccSeq,
-                                modeInfo: {
-                                    single: {
-                                      mode: SignMode.SIGN_MODE_DIRECT,
-                                    },
-                                },
-                            },
-                        ],
-                        fee: Fee.fromPartial({
-                            amount: [{
-                                denom: "uelder",
-                                amount: "400000",
-                            }],
-                            gasLimit: 400000,
-                        }),
-                    },
-                )
-            ).finish()
+            let p = coins(500000, "uelder")
+            const authInfoBytes2 = makeAuthInfoBytes(
+                [{ pubkey: pubk, sequence: elderAccSeq }],
+                p,
+                elderFee.gas,
+                undefined,
+                undefined,
+            );
 
             const signDoc = makeSignDoc(bodyBytes, authInfoBytes2, chainId, accountNumber);
             const signBytes = makeSignBytes(signDoc);
@@ -229,24 +217,24 @@ const Staking = ({ account, elderAddress, elderClient, elderAccountNumber }) => 
             console.log("SignBytes - ", signBytes)
 
             const signingWallet = await ElderDirectSecp256k1Wallet.fromCompressedPublicKey(pubKeyBytes);
-            const { signature } = await signingWallet.signDirect(elderAddress, signDoc);
+            const { signed, signature } = await signingWallet.signDirect(elderAddress, signDoc);
 
             console.log("Sign Response:", signature);
             console.log("Signs - ", Buffer.from(signature.signature, "base64"))
 
-            const txRaw = TxRaw.fromPartial({
-                bodyBytes: bodyBytes,
-                authInfoBytes: authInfoBytes2,
+            const txRaw = TxRaw.encode({
+                bodyBytes: signed.bodyBytes,
+                authInfoBytes: signed.authInfoBytes,
                 signatures: [fromBase64(signature.signature)],
-            });
+            }).finish();
 
 
             console.log("Anshal - aaa")
-            const txRawBytes = TxRaw.encode(txRaw).finish();
+            // const txRawBytes = TxRaw.encode(txRaw).finish();
 
             // const txRawBytes = Uint8Array.from(txRaw);
             try {
-                console.log("Broadcasting Transaction...", txRawBytes);
+                console.log("Broadcasting Transaction...", txRaw);
                 const client = await SigningStargateClient.connectWithSigner(
                     "http://127.0.0.1:26657",
                     "elder_122018",
@@ -259,7 +247,7 @@ const Staking = ({ account, elderAddress, elderClient, elderAccountNumber }) => 
                 );
                 console.log("bb")
                 // const broadcastResult = await client.sendTokens("elder1zwpjy8nj24g5y45yz9taup6nete0mftn6q30qk", "elder108nm9kcfjrlwpyj5l8yqguen6yc2tdprusd9p5", "100uelder");
-                const broadcastResult = await client.broadcastTx(txRawBytes)
+                const broadcastResult = await client.broadcastTx(txRaw)
                 console.log('Transaction broadcasted:', broadcastResult);
               } catch (error) {
                 console.error('Error broadcasting transaction:', error);
@@ -353,3 +341,30 @@ const Staking = ({ account, elderAddress, elderClient, elderAccountNumber }) => 
 };
 
 export default Staking;
+
+var commonRegistry = new Registry();
+commonRegistry.register(customMessageTypeUrl, MsgSubmitRollTx);
+function createTxBodyBytes(elderMsg) {
+    const txBody = {
+        typeUrl: "/cosmos.tx.v1beta1.TxBody",
+        value: {
+            messages: [
+                {
+                    ...elderMsg,
+                }
+            ],
+        }
+    };
+
+    const txBodyBytes = commonRegistry.encode(txBody);
+
+    return txBodyBytes;
+}
+
+function bytesToHex(bytes) {
+    return '0x' + Array.from(bytes, byte =>
+        byte.toString(16).padStart(2, '0')
+    ).join('');
+}
+
+export { bytesToHex };
