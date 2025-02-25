@@ -13,8 +13,6 @@ const Home = () => {
     const [account, setAccount] = useState(null);
     const [elderAddress, setElderAddress] = useState(null);
     var [elderClient, setElderClient] = useState(null);
-    const [elderAccountNumber, setElderAccountNumber] = useState(null);
-    var [elderAccountSequence, setElderAccountSequence] = useState(null);
     const [elderPublicKey, setElderPublicKey] = useState(null);
 
     return (
@@ -30,8 +28,6 @@ const Home = () => {
                     elderAddress={elderAddress}
                     setElderAddress={setElderAddress}
                     setElderClient={setElderClient}
-                    setElderAccountNumber={setElderAccountNumber}
-                    setElderAccountSequence={setElderAccountSequence}
                     setElderPublicKey={setElderPublicKey}
                 />
             </div>
@@ -42,19 +38,13 @@ const Home = () => {
                             account={account}
                             elderAddress={elderAddress}
                             elderClient={elderClient}
-                            elderAccountNumber={elderAccountNumber}
-                            elderAccountSequence={elderAccountSequence}
                             elderPublicKey={elderPublicKey}
-                            setElderAccountSequence={setElderAccountSequence}
                         />
                         <DummyToken
                             account={account}
                             elderAddress={elderAddress}
                             elderClient={elderClient}
-                            elderAccountNumber={elderAccountNumber}
-                            elderAccountSequence={elderAccountSequence}
                             elderPublicKey={elderPublicKey}
-                            setElderAccountSequence={setElderAccountSequence}
                         />
                     </div>
                 </>

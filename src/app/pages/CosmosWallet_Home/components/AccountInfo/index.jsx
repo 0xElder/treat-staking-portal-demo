@@ -13,19 +13,15 @@ const AccountInfo = ({
     elderAddress,
     setElderAddress,
     setElderClient,
-    setElderAccountNumber,
-    setElderAccountSequence,
     setElderPublicKey,
 }) => {
     useEffect(() => {
         if (window.keplr) {
             (async () => {
-                const { elderAddress, elderClient, elderAccountNumber, elderAccountSequence, elderPublicKey } = await cosmos_getElderClient(ELDER_CHAIN_CONFIG);
+                const { elderAddress, elderClient, elderPublicKey } = await cosmos_getElderClient(ELDER_CHAIN_CONFIG);
 
                 setElderAddress(elderAddress);
                 setElderClient(elderClient);
-                setElderAccountNumber(elderAccountNumber);
-                setElderAccountSequence(elderAccountSequence);
                 setElderPublicKey(elderPublicKey);
 
                 let ethAddress = getEthereumAddressFromCosmosCompressedPubKey(elderPublicKey);

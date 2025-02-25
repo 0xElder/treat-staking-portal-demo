@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import React, { useEffect, useState } from "react";
 import {DUMMY_TOKEN, DUMMY_TOKEN_ADDRESS, provider} from "../../rpc_eth_web3";
-import { cosmos_sendElderCustomTransaction, cosmos_getElderMsgAndFee } from "elderjs";
+import { cosmos_getElderMsgAndFeeTxRaw } from "elderjs";
 import { ELDER_CHAIN_CONFIG } from "../../../../../../constants";
 import "./styles.css";
 import shibLogo from "./shiba-inu-shib-logo.png";
@@ -37,28 +37,23 @@ const addDummyTokenToMetaMask = async () => {
     }
 };
 
-const DummyToken = ({
-    account, elderAddress, elderClient, elderAccountNumber, elderAccountSequence, elderPublicKey, setElderAccountSequence
-}) => {
+const DummyToken = ({account, elderAddress, elderClient, elderPublicKey}) => {
     const [balance, setBalance] = useState("");
     const [claimed, setClaimed] = useState(false);
 
     const claim = async () => {
         const tx = await DUMMY_TOKEN.claim.populateTransaction();
+        
+        let { tx_hash, rawTx } = await cosmos_getElderMsgAndFeeTxRaw(tx, elderAddress, elderPublicKey, 1000000, ethers.parseEther("0"), ELDER_CHAIN_CONFIG.rollChainID, ELDER_CHAIN_CONFIG.rollID, ELDER_CHAIN_CONFIG.chainName);
+        
+        const broadcastResult = await elderClient.broadcastTx(rawTx);
 
-        let { elderMsg, elderFee, tx_hash } = cosmos_getElderMsgAndFee(tx, elderAddress, 1000000, ethers.parseEther("0"), ELDER_CHAIN_CONFIG.rollChainID, ELDER_CHAIN_CONFIG.rollID, elderAccountNumber, elderPublicKey, elderAccountSequence);
-        let {success, data } = await cosmos_sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
-
-        if (!success) {
+        if (broadcastResult.code !== 0) {
             toast.error(`Claim Treat Transaction failed: ${data}`);
             return;
         }
-        
-        setElderAccountSequence(elderAccountSequence + 1);
-        toast.success(`Claim Treat Transaction Hash: ${tx_hash}`);
 
-        // const receipt = await tx.wait();
-        // console.log(receipt);
+        toast.success(`Claim Treat Transaction Hash: ${tx_hash}`);
 
         getBalanceAndClaimed(account, provider)
             .then(([balance, claimed]) => {
