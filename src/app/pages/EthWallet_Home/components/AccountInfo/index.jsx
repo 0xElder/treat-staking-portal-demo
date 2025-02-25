@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { provider } from "../../wallet_eth_web3";
-import { eth_getAccountNumberAndSequence, eth_getElderAccountInfoFromSignature } from "elderjs";
+import {  eth_getElderAccountInfoFromSignature } from "elderjs";
 import { getMaskedValue } from "../../../../../utils/helper";
 import CopyToClipboard from "../../../../components/CopyToClipboard";
 import { MdAccountBox, MdFingerprint } from "react-icons/md";
@@ -12,8 +12,6 @@ const AccountInfo = ({
     setAccount,
     elderAddress,
     setElderAddress,
-    setElderAccountNumber,
-    setElderAccountSequence,
     setElderPublicKey,
 }) => {
     useEffect(() => {
@@ -43,12 +41,8 @@ const AccountInfo = ({
 
         var { recoveredPublicKey, elderAddr } = await eth_getElderAccountInfoFromSignature(message, signature)
 
-        const { elderAccountNumber, elderAccountSequence } = await eth_getAccountNumberAndSequence(ELDER_CHAIN_CONFIG.rpc, elderAddr);
-
         setElderAddress(elderAddr);
         setElderPublicKey(recoveredPublicKey);
-        setElderAccountNumber(elderAccountNumber);
-        setElderAccountSequence(elderAccountSequence);
     };
 
     const checkAccounts = async () => {

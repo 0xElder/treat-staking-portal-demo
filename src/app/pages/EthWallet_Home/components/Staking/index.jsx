@@ -8,6 +8,8 @@ import { formatNumber } from "../../../../../utils/helper";
 import { toast } from 'react-toastify';
 // import ToggleBtn from "../../../../components/ToggleBtn";
 import './styles.css';
+import { eth_getElderMsgAndFeeTxRaw, eth_broadcastTx } from "elderjs/";
+import { ELDER_CHAIN_CONFIG } from "../../../../../../constants";
 
 const getStakingViews = async account => {
     const [staked, reward, totalStaked] = await Promise.all([
@@ -22,7 +24,7 @@ const getStakingViews = async account => {
     };
 };
 
-const Staking = ({ account, elderAddress, elderAccountNumber, elderAccountSequence, elderPublicKey, setElderAccountSequence }) => {
+const Staking = ({ account, elderAddress, elderPublicKey }) => {
     const [views, setViews] = useState({});
     const [stake, setStake] = useState("");
     const [withdraw, setWithdraw] = useState("");
@@ -43,21 +45,17 @@ const Staking = ({ account, elderAddress, elderAccountNumber, elderAccountSequen
             STAKING_CONTRACT.target
         );
 
-        let seq = elderAccountSequence;
-
-        if (allowance<amount) {
+        if (allowance < amount) {
             const tx = await dummyToken.approve.populateTransaction(STAKING_CONTRACT.target, amount);
 
-            // eth_getElderMsgAndFee(tx, elderAddress, rollappGasLimit, rollapValueTransfer, rollappChainID)
-            // let { elderMsg, elderFee, tx_hash } = eth_getElderMsgAndFee(tx, elderAddress, 1000000, ethers.parseEther("0"), ELDER_CHAIN_CONFIG.rollChainID, ELDER_CHAIN_CONFIG.rollID, elderAccountNumber, elderPublicKey, seq);
-            // let {success, data } = await eth_sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
+            let { tx_hash, rawTx } = await eth_getElderMsgAndFeeTxRaw(tx, elderAddress, elderPublicKey, 1000000, ethers.parseEther("0"), ELDER_CHAIN_CONFIG);
+            let broadcastResult = await eth_broadcastTx(rawTx, ELDER_CHAIN_CONFIG.rpc);
+            console.log("broadcastResult", broadcastResult);
 
-            if (!success) {
-                toast.error(`Approval Transaction failed: ${data}`);
+            if (broadcastResult.code !== 0) {
+                toast.error(`Approval Transaction failed`);
                 return;
             }
-
-            seq++;
 
             toast.success(`Approval Transaction Hash: ${tx_hash}`);
         }
@@ -65,17 +63,15 @@ const Staking = ({ account, elderAddress, elderAccountNumber, elderAccountSequen
         const staking = STAKING_CONTRACT.connect(signer);
 
         const tx = await staking.stake.populateTransaction(amount);
+        let { tx_hash, rawTx } = await eth_getElderMsgAndFeeTxRaw(tx, elderAddress, elderPublicKey, 1000000, ethers.parseEther("0"), ELDER_CHAIN_CONFIG);
+        let broadcastResult = await eth_broadcastTx(rawTx, ELDER_CHAIN_CONFIG.rpc);
+        console.log("broadcastResult", broadcastResult);
 
-        // let { elderMsg, elderFee, tx_hash } = eth_getElderMsgAndFee(tx, elderAddress, 1000000, ethers.parseEther("0"), ELDER_CHAIN_CONFIG.rollChainID, ELDER_CHAIN_CONFIG.rollID, elderAccountNumber, elderPublicKey, seq);
-        // let {success, data } = await eth_sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
-
-        if (!success) {
-            toast.error(`Staking Transaction failed: ${data}`);
-            setElderAccountSequence(elderAccountSequence + 1);
+        if (broadcastResult.code !== 0) {
+            toast.error(`Staking Transaction failed`);
             return;
         }
-        
-        setElderAccountSequence(elderAccountSequence + 2);
+
         toast.success(`Staking Transaction Hash: ${tx_hash}`);
     };
 
@@ -87,15 +83,15 @@ const Staking = ({ account, elderAddress, elderAccountNumber, elderAccountSequen
         const amount = ethers.parseEther(withdraw);
         const tx = await staking.withdraw.populateTransaction(amount);
 
-        // let { elderMsg, elderFee, tx_hash } = eth_getElderMsgAndFee(tx, elderAddress, 1000000, ethers.parseEther("0"), ELDER_CHAIN_CONFIG.rollChainID, ELDER_CHAIN_CONFIG.rollID, elderAccountNumber, elderPublicKey, elderAccountSequence);
-        // let {success, data } = await eth_sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
+        let { tx_hash, rawTx } = await eth_getElderMsgAndFeeTxRaw(tx, elderAddress, elderPublicKey, 1000000, ethers.parseEther("0"), ELDER_CHAIN_CONFIG);
+        let broadcastResult = await eth_broadcastTx(rawTx, ELDER_CHAIN_CONFIG.rpc);
+        console.log("broadcastResult", broadcastResult);
 
-        if (!success) {
-            toast.error(`Withdraw Transaction failed: ${data}`);
+        if (broadcastResult.code !== 0) {
+            toast.error(`Withdraw Transaction failed`);
             return;
         }
 
-        setElderAccountSequence(elderAccountSequence + 1);
         toast.success(`Withdraw Transaction Hash: ${tx_hash}`);
     };
 
@@ -104,16 +100,15 @@ const Staking = ({ account, elderAddress, elderAccountNumber, elderAccountSequen
         const staking = STAKING_CONTRACT.connect(signer);
 
         const tx = await staking.claimReward.populateTransaction();
+        let { tx_hash, rawTx } = await eth_getElderMsgAndFeeTxRaw(tx, elderAddress, elderPublicKey, 1000000, ethers.parseEther("0"), ELDER_CHAIN_CONFIG);
+        let broadcastResult = await eth_broadcastTx(rawTx, ELDER_CHAIN_CONFIG.rpc);
+        console.log("broadcastResult", broadcastResult);
 
-        // let { elderMsg, elderFee, tx_hash } = eth_getElderMsgAndFee(tx, elderAddress, 1000000, ethers.parseEther("0"), ELDER_CHAIN_CONFIG.rollChainID, ELDER_CHAIN_CONFIG.rollID, elderAccountNumber, elderPublicKey, elderAccountSequence);
-        // let {success, data } = await eth_sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
-
-        if (!success) {
-            toast.error(`Claim Reward Transaction failed: ${data}`);
+        if (broadcastResult.code !== 0) {
+            toast.error(`Claim Reward Transaction failed`);
             return;
         }
 
-        setElderAccountSequence(elderAccountSequence + 1);
         toast.success(`Claim Reward Transaction Hash: ${tx_hash}`);
     };
 

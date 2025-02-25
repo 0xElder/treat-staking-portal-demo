@@ -48,7 +48,7 @@ const Staking = ({ account, elderAddress, elderClient, elderPublicKey }) => {
             const broadcastResult = await elderClient.broadcastTx(rawTx);
 
             if (broadcastResult.code !== 0) {
-                toast.error(`Approval Transaction failed: ${data}`);
+                toast.error(`Approval Transaction failed`);
                 return;
             }
 
@@ -61,7 +61,7 @@ const Staking = ({ account, elderAddress, elderClient, elderPublicKey }) => {
         const broadcastResult = await elderClient.broadcastTx(rawTx);
 
         if (broadcastResult.code !== 0) {
-            toast.error(`Staking Transaction failed: ${data}`);
+            toast.error(`Staking Transaction failed`);
             return;
         }
 
@@ -78,7 +78,7 @@ const Staking = ({ account, elderAddress, elderClient, elderPublicKey }) => {
         const broadcastResult = await elderClient.broadcastTx(rawTx);
 
         if (broadcastResult.code !== 0) {
-            toast.error(`Withdraw Transaction failed: ${data}`);
+            toast.error(`Withdraw Transaction failed`);
             return;
         }
 
@@ -92,7 +92,7 @@ const Staking = ({ account, elderAddress, elderClient, elderPublicKey }) => {
         const broadcastResult = await elderClient.broadcastTx(rawTx);
 
         if (broadcastResult.code !== 0) {
-            toast.error(`Claim Reward Transaction failed: ${data}`);
+            toast.error(`Claim Reward Transaction failed`);
             return;
         }
 
