@@ -1,13 +1,8 @@
 import { ethers } from "ethers";
 import React, { useEffect, useState } from "react";
-import {
-    DUMMY_TOKEN,
-    DUMMY_TOKEN_ADDRESS,
-    provider,
-} from "../../../../../web3";
-import { sendElderCustomTransaction, getElderMsgAndFee } from "elderjs";
+import { DUMMY_TOKEN, DUMMY_TOKEN_ADDRESS, provider } from "../../rpc_eth_web3";
+import { cosmos_getElderMsgAndFeeTxRaw } from "elderjs";
 import { ELDER_CHAIN_CONFIG } from "../../../../../../constants";
-// import { MdOutlineToken } from "react-icons/md";
 import "./styles.css";
 import shibLogo from "./shiba-inu-shib-logo.png";
 import { toast } from 'react-toastify';
@@ -42,30 +37,23 @@ const addDummyTokenToMetaMask = async () => {
     }
 };
 
-const DummyToken = ({
-    account, elderAddress, elderClient, elderAccountNumber, elderAccountSequence, elderPubkicKey, setElderAccountSequence
-}) => {
+const DummyToken = ({ account, elderAddress, elderClient, elderPublicKey }) => {
     const [balance, setBalance] = useState("");
     const [claimed, setClaimed] = useState(false);
 
     const claim = async () => {
-        const signer = provider.getSigner();
-        const dummyToken = DUMMY_TOKEN.connect(signer);
-        const tx = await dummyToken.claim.populateTransaction();
+        const tx = await DUMMY_TOKEN.claim.populateTransaction();
 
-        let { elderMsg, elderFee, tx_hash } = getElderMsgAndFee(tx, elderAddress, 1000000, ethers.parseEther("0"), ELDER_CHAIN_CONFIG.rollChainID, ELDER_CHAIN_CONFIG.rollID, elderAccountNumber, elderPubkicKey, elderAccountSequence);
-        let {success, data } = await sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
+        let { tx_hash, rawTx } = await cosmos_getElderMsgAndFeeTxRaw(tx, elderAddress, elderPublicKey, 1000000, ethers.parseEther("0"), ELDER_CHAIN_CONFIG.rollChainID, ELDER_CHAIN_CONFIG.rollID, ELDER_CHAIN_CONFIG.chainName);
 
-        if (!success) {
-            toast.error(`Claim Treat Transaction failed: ${data}`);
+        const broadcastResult = await elderClient.broadcastTx(rawTx);
+
+        if (broadcastResult.code !== 0) {
+            toast.error(`Claim Treat Transaction failed`);
             return;
         }
-        
-        setElderAccountSequence(elderAccountSequence + 1);
-        toast.success(`Claim Treat Transaction Hash: ${tx_hash}`);
 
-        // const receipt = await tx.wait();
-        // console.log(receipt);
+        toast.success(`Claim Treat Transaction Hash: ${tx_hash}`);
 
         getBalanceAndClaimed(account, provider)
             .then(([balance, claimed]) => {

@@ -1,0 +1,14 @@
+.treatStakingPortal {
+    /* Assuming the base classes already set flex properties */
+    align-items: center; /* Center items in the flex container */
+    justify-content: center; /* Center content vertically if there's extra space */
+}
+
+.treatStakingPortal h1 {
+    font-size: 2.5em; /* Adjust to your preference */
+    font-weight: bold; /* Bold text */
+    margin: 0; /* Remove default margins */
+    text-align: center; /* Center text within h1 */
+    /* Example font, replace with your preferred font */
+    font-family: 'Arial Black', 'Arial Bold', Gadget, sans-serif;
+}

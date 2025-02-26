@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
-import { provider } from "../../../../../web3";
+import { provider } from "../../wallet_eth_web3";
 import { MdAccountBalance } from "react-icons/md";
 import { formatNumber } from "../../../../../utils/helper";
 import "./styles.css";

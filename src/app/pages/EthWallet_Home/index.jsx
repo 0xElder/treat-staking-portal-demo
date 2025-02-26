@@ -3,7 +3,7 @@ import Staking from "./components/Staking";
 import DummyToken from "./components/DummyToken";
 import { Balance } from "./components/Balance";
 import { TreatPortal } from "./components/TreatPortal";
-import { provider } from "../../../web3";
+import { provider } from "./wallet_eth_web3";
 import AccountInfo from "./components/AccountInfo";
 import { ToastContainer } from 'react-toastify';
 // import ToggleBtn from "../../components/ToggleBtn";
@@ -12,10 +12,7 @@ import "./styles.css";
 const Home = () => {
     const [account, setAccount] = useState(null);
     const [elderAddress, setElderAddress] = useState(null);
-    var [elderClient, setElderClient] = useState(null);
-    const [elderAccountNumber, setElderAccountNumber] = useState(null);
-    var [elderAccountSequence, setElderAccountSequence] = useState(null);
-    const [elderPubkicKey, setElderPublicKey] = useState(null);
+    const [elderPublicKey, setElderPublicKey] = useState(null);
 
     return (
         <div className="homeContainer">
@@ -29,9 +26,6 @@ const Home = () => {
                     setAccount={setAccount}
                     elderAddress={elderAddress}
                     setElderAddress={setElderAddress}
-                    setElderClient={setElderClient}
-                    setElderAccountNumber={setElderAccountNumber}
-                    setElderAccountSequence={setElderAccountSequence}
                     setElderPublicKey={setElderPublicKey}
                 />
             </div>
@@ -41,20 +35,12 @@ const Home = () => {
                         <Staking
                             account={account}
                             elderAddress={elderAddress}
-                            elderClient={elderClient}
-                            elderAccountNumber={elderAccountNumber}
-                            elderAccountSequence={elderAccountSequence}
-                            elderPubkicKey={elderPubkicKey}
-                            setElderAccountSequence={setElderAccountSequence}
+                            elderPublicKey={elderPublicKey}
                         />
                         <DummyToken
                             account={account}
                             elderAddress={elderAddress}
-                            elderClient={elderClient}
-                            elderAccountNumber={elderAccountNumber}
-                            elderAccountSequence={elderAccountSequence}
-                            elderPubkicKey={elderPubkicKey}
-                            setElderAccountSequence={setElderAccountSequence}
+                            elderPublicKey={elderPublicKey}
                         />
                     </div>
                 </>

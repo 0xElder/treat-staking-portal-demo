@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
 import { ethers } from "ethers";
 import React, { useEffect, useState } from "react";
-import { DUMMY_TOKEN, provider, STAKING_CONTRACT } from "../../../../../web3";
-import { sendElderCustomTransaction, getElderMsgAndFee } from "elderjs";
+import { DUMMY_TOKEN, provider, STAKING_CONTRACT } from "../../rpc_eth_web3";
+import { cosmos_getElderMsgAndFeeTxRaw } from "elderjs";
 import { formatNumber } from "../../../../../utils/helper";
 import { ELDER_CHAIN_CONFIG } from "../../../../../../constants";
 import { toast } from 'react-toastify';
@@ -22,7 +22,7 @@ const getStakingViews = async account => {
     };
 };
 
-const Staking = ({ account, elderAddress, elderClient, elderAccountNumber, elderAccountSequence, elderPubkicKey, setElderAccountSequence }) => {
+const Staking = ({ account, elderAddress, elderClient, elderPublicKey }) => {
     const [views, setViews] = useState({});
     const [stake, setStake] = useState("");
     const [withdraw, setWithdraw] = useState("");
@@ -34,86 +34,68 @@ const Staking = ({ account, elderAddress, elderClient, elderAccountNumber, elder
 
     const handleStake = async event => {
         event.preventDefault();
-        const signer = provider.getSigner(account);
         const amount = ethers.parseEther(stake);
-        const dummyToken = DUMMY_TOKEN.connect(signer);
 
         const allowance = await DUMMY_TOKEN.allowance(
             account,
             STAKING_CONTRACT.target
         );
 
-        let seq = elderAccountSequence;
+        if (allowance < amount) {
+            const tx = await DUMMY_TOKEN.approve.populateTransaction(STAKING_CONTRACT.target, amount);
 
-        if (allowance<amount) {
-            const tx = await dummyToken.approve.populateTransaction(STAKING_CONTRACT.target, amount);
+            let { tx_hash, rawTx } = await cosmos_getElderMsgAndFeeTxRaw(tx, elderAddress, elderPublicKey, 1000000, ethers.parseEther("0"), ELDER_CHAIN_CONFIG.rollChainID, ELDER_CHAIN_CONFIG.rollID, ELDER_CHAIN_CONFIG.chainName);
+            const broadcastResult = await elderClient.broadcastTx(rawTx);
 
-            // getElderMsgAndFee(tx, elderAddress, rollappGasLimit, rollapValueTransfer, rollappChainID)
-            let { elderMsg, elderFee, tx_hash } = getElderMsgAndFee(tx, elderAddress, 1000000, ethers.parseEther("0"), ELDER_CHAIN_CONFIG.rollChainID, ELDER_CHAIN_CONFIG.rollID, elderAccountNumber, elderPubkicKey, seq);
-            let {success, data } = await sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
-
-            if (!success) {
-                toast.error(`Approval Transaction failed: ${data}`);
+            if (broadcastResult.code !== 0) {
+                toast.error(`Approval Transaction failed`);
                 return;
             }
-
-            seq++;
 
             toast.success(`Approval Transaction Hash: ${tx_hash}`);
         }
 
-        const staking = STAKING_CONTRACT.connect(signer);
+        const tx = await STAKING_CONTRACT.stake.populateTransaction(amount);
 
-        const tx = await staking.stake.populateTransaction(amount);
+        let { tx_hash, rawTx } = await cosmos_getElderMsgAndFeeTxRaw(tx, elderAddress, elderPublicKey, 1000000, ethers.parseEther("0"), ELDER_CHAIN_CONFIG.rollChainID, ELDER_CHAIN_CONFIG.rollID, ELDER_CHAIN_CONFIG.chainName);
+        const broadcastResult = await elderClient.broadcastTx(rawTx);
 
-        let { elderMsg, elderFee, tx_hash } = getElderMsgAndFee(tx, elderAddress, 1000000, ethers.parseEther("0"), ELDER_CHAIN_CONFIG.rollChainID, ELDER_CHAIN_CONFIG.rollID, elderAccountNumber, elderPubkicKey, seq);
-        let {success, data } = await sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
-
-        if (!success) {
-            toast.error(`Staking Transaction failed: ${data}`);
-            setElderAccountSequence(elderAccountSequence + 1);
+        if (broadcastResult.code !== 0) {
+            toast.error(`Staking Transaction failed`);
             return;
         }
-        
-        setElderAccountSequence(elderAccountSequence + 2);
+
         toast.success(`Staking Transaction Hash: ${tx_hash}`);
     };
 
     const handleWithdraw = async event => {
         event.preventDefault();
-        const signer = provider.getSigner(account);
-        const staking = STAKING_CONTRACT.connect(signer);
 
         const amount = ethers.parseEther(withdraw);
-        const tx = await staking.withdraw.populateTransaction(amount);
+        const tx = await STAKING_CONTRACT.withdraw.populateTransaction(amount);
 
-        let { elderMsg, elderFee, tx_hash } = getElderMsgAndFee(tx, elderAddress, 1000000, ethers.parseEther("0"), ELDER_CHAIN_CONFIG.rollChainID, ELDER_CHAIN_CONFIG.rollID, elderAccountNumber, elderPubkicKey, elderAccountSequence);
-        let {success, data } = await sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
+        let { tx_hash, rawTx } = await cosmos_getElderMsgAndFeeTxRaw(tx, elderAddress, elderPublicKey, 1000000, ethers.parseEther("0"), ELDER_CHAIN_CONFIG.rollChainID, ELDER_CHAIN_CONFIG.rollID, ELDER_CHAIN_CONFIG.chainName);
+        const broadcastResult = await elderClient.broadcastTx(rawTx);
 
-        if (!success) {
-            toast.error(`Withdraw Transaction failed: ${data}`);
+        if (broadcastResult.code !== 0) {
+            toast.error(`Withdraw Transaction failed`);
             return;
         }
 
-        setElderAccountSequence(elderAccountSequence + 1);
         toast.success(`Withdraw Transaction Hash: ${tx_hash}`);
     };
 
     const handleClaimReward = async () => {
-        const signer = provider.getSigner(account);
-        const staking = STAKING_CONTRACT.connect(signer);
+        const tx = await STAKING_CONTRACT.claimReward.populateTransaction();
 
-        const tx = await staking.claimReward.populateTransaction();
+        let { tx_hash, rawTx } = await cosmos_getElderMsgAndFeeTxRaw(tx, elderAddress, elderPublicKey, 1000000, ethers.parseEther("0"), ELDER_CHAIN_CONFIG.rollChainID, ELDER_CHAIN_CONFIG.rollID, ELDER_CHAIN_CONFIG.chainName);
+        const broadcastResult = await elderClient.broadcastTx(rawTx);
 
-        let { elderMsg, elderFee, tx_hash } = getElderMsgAndFee(tx, elderAddress, 1000000, ethers.parseEther("0"), ELDER_CHAIN_CONFIG.rollChainID, ELDER_CHAIN_CONFIG.rollID, elderAccountNumber, elderPubkicKey, elderAccountSequence);
-        let {success, data } = await sendElderCustomTransaction(elderAddress, elderClient, elderMsg, elderFee);
-
-        if (!success) {
-            toast.error(`Claim Reward Transaction failed: ${data}`);
+        if (broadcastResult.code !== 0) {
+            toast.error(`Claim Reward Transaction failed`);
             return;
         }
 
-        setElderAccountSequence(elderAccountSequence + 1);
         toast.success(`Claim Reward Transaction Hash: ${tx_hash}`);
     };
 

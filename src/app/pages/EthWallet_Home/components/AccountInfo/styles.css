@@ -1,0 +1,12 @@
+.accountItem {
+    font-size: 16px;
+    font-weight: 500;
+}
+.accountValue {
+    margin-left: 10px;
+    color: #51cf66;
+    font-size: 20px;
+}
+.accountRow {
+    height: 42px;
+}

@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
-import { getElderClient } from "elderjs";
+import { cosmos_getElderClient, getEthereumAddressFromCosmosCompressedPubKey } from "elderjs";
 import { ELDER_CHAIN_CONFIG } from "../../../../../../constants";
 import { getMaskedValue } from "../../../../../utils/helper";
 import CopyToClipboard from "../../../../components/CopyToClipboard";
 import { MdAccountBox, MdFingerprint } from "react-icons/md";
+
 import "./styles.css";
 
 const AccountInfo = ({
@@ -12,47 +13,30 @@ const AccountInfo = ({
     elderAddress,
     setElderAddress,
     setElderClient,
-    setElderAccountNumber,
-    setElderAccountSequence,
     setElderPublicKey,
 }) => {
     useEffect(() => {
-        checkAccounts().then(setAccount).catch(console.error);
-
         if (window.keplr) {
             (async () => {
-                const { elderAddress, elderClient, elderAccountNumber, elderAccountSequence, elderPublicKey } =
-                    await getElderClient(ELDER_CHAIN_CONFIG);
+                const { elderAddress, elderClient, elderPublicKey } = await cosmos_getElderClient(ELDER_CHAIN_CONFIG);
+
                 setElderAddress(elderAddress);
                 setElderClient(elderClient);
-                setElderAccountNumber(elderAccountNumber);
-                setElderAccountSequence(elderAccountSequence);
                 setElderPublicKey(elderPublicKey);
+
+                let ethAddress = getEthereumAddressFromCosmosCompressedPubKey(elderPublicKey);
+                setAccount(ethAddress);
             })();
         }
     }, []);
 
-    const checkAccounts = async () => {
-        if (!window.ethereum) {
-            return null;
-        }
-        const [account] = await window.ethereum.request({
-            method: "eth_accounts",
-        });
-        window.ethereum.on("accountsChanged", accounts => {
-            setAccount(accounts[0]);
-        });
-        return account;
-    };
-
     const requestAccounts = async () => {
-        if (!window.ethereum) {
-            return null;
-        }
-        const [account] = await window.ethereum.request({
-            method: "eth_requestAccounts",
-        });
-        return account;
+        const { elderPublicKey } = await cosmos_getElderClient(ELDER_CHAIN_CONFIG);
+
+        let ethAddress = getEthereumAddressFromCosmosCompressedPubKey(elderPublicKey);
+        setAccount(ethAddress);
+
+        return ethAddress;
     };
 
     const renderAccountRow = () => {
@@ -88,7 +72,7 @@ const AccountInfo = ({
                     </div>
                 ) : (
                     renderButton("Request Elder Account", () =>
-                        getElderClient(ELDER_CHAIN_CONFIG)
+                        cosmos_getElderClient(ELDER_CHAIN_CONFIG)
                     )
                 )}
             </div>
