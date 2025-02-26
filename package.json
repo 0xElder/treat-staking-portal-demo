@@ -20,7 +20,7 @@
         "@cosmjs/encoding": "^0.33.0",
         "@cosmjs/proto-signing": "^0.33.0",
         "@cosmjs/stargate": "^0.33.0",
-        "elderjs": "^1.2.6",
+        "elderjs": "^1.2.7",
         "ethers": "^6.1.0",
         "react": "^19.0.0",
         "react-dom": "^19.0.0",
