@@ -27,7 +27,7 @@ const addDummyTokenToMetaMask = async () => {
                 type: "ERC20",
                 options: {
                     address: DUMMY_TOKEN_ADDRESS,
-                    symbol: "DT",
+                    symbol: "TREAT",
                     decimals: 18,
                 },
             },
