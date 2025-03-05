@@ -5,7 +5,8 @@ import {
     DUMMY_TOKEN_ADDRESS,
     provider,
 } from "../../wallet_eth_web3";
-import { eth_getElderMsgAndFeeTxRaw } from "elderjs/";
+import { eth_getElderMsgAndFeeTxRaw, eth_broadcastTx } from "elderjs/";
+
 import { ELDER_CHAIN_CONFIG } from "../../../../../../constants";
 // import { MdOutlineToken } from "react-icons/md";
 import "./styles.css";
