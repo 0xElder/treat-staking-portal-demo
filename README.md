@@ -38,11 +38,13 @@ Replace `constants.js` variables :
 ```
 export const ELDER_CHAIN_CONFIG = {
 
-    chainName: "devnet-1", # predefined config of devnet-1 for Elder
+    chainName: "devnet-4", # predefined config of devnet-1 for Elder
     rpc: "http://localhost:26657", # rpc/tendermint address for Elder Node (default :26657)
     rest: "http://localhost:1317", # rest address for Elder Node (default :1317)
     rollID: 11, # registered ID of target Rollapp on Elder
-    
+    rollChainID: 42069, # chainID of target Rollapp on Elder
+
+    eth_rpc : "http://localhost:8545", # rpc address for Ethereum Node (default :8545)
 };
 ```
 
